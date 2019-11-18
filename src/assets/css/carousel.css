@@ -1,0 +1,182 @@
+html,
+body {
+
+    height: 100%;
+}
+
+.carousel,
+.item,
+.active {
+    height: 100%;
+}
+
+.carousel-inner {
+
+  height: 100%;
+  background: #000;
+  opacity: 1;
+}
+
+.carousel-caption{padding-bottom:80px;}
+
+h2{font-size: 60px;}
+/* p{padding:30px} */
+
+/* Background images are set within the HTML using inline CSS, not here */
+
+.fill {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    opacity:0.6;
+}
+
+
+/**
+ * Button
+ */
+.btn-transparent {
+  background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+}
+.btn-transparent:hover {
+  background-color: #fff;
+}
+
+.btn-rounded {
+  border-radius: 70px;
+}
+
+.btn-large {
+  padding: 11px 45px;
+  /* font-size: 18px; */
+}
+
+/**
+ * Change animation duration
+ */
+.animated {
+  -webkit-animation-duration: 1.5s;
+  animation-duration: 1.5s;
+}
+
+@-webkit-keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(100px, 0, 0);
+    transform: translate3d(100px, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(100px, 0, 0);
+    transform: translate3d(100px, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+.fadeInRight {
+  -webkit-animation-name: fadeInRight;
+  animation-name: fadeInRight;
+}
+
+/* arrow style */
+
+.carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev{
+  /* background-color:#ED8509; */
+  /* background-color:#a52b22; */
+ top:50%;
+ transform:'matrix(1,0,0,1,0,-30)';
+}
+
+.carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev:hover{
+ /* background-color:#ED8509; */
+ top:50%;
+ transform:'matrix(1,0,0,1,0,-30)';
+}
+
+.carousel-control .glyphicon-chevron-right, .carousel-control .icon-next{
+  /* background-color:#ED8509; */
+  /* background-color:#a52b22; */
+ 
+ top:50%;
+ transform:'matrix(1,0,0,1,0,-30)';
+ /* border:1px solid red; */
+ 
+}
+
+.carousel-control .glyphicon-chevron-right, .carousel-control .icon-next:hover{
+  /* background-color:#ED8509; */
+ top:50%;
+ transform:'matrix(1,0,0,1,0,-30)';
+}
+
+.carousel-item {
+    height: 350px;   
+}
+
+.carousel-indicators li {
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;    
+}
+.carousel-indicators {
+    margin-left:19.7%;
+}
+
+.carousel-caption{
+    text-align: left;
+    top:10%;
+}
+/* arrow style */
+
+.carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev {
+
+  /* height: 5.5%; */
+  /* top: 50%; */
+  transform: 'matrix(1, 0, 0, 1, 0, -30)';
+  font-size: 35px;
+  width: 30px;
+  height: 30px;
+}
+
+.carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev:hover {
+  top: 50%;
+  transform: 'matrix(1, 0, 0, 1, 0, -30)';
+  /* height: 5.5%; */  
+}
+
+.carousel-control .glyphicon-chevron-right, .carousel-control .icon-next {
+
+  /* height: 5.5%; */
+  top: 50%;
+  transform: 'matrix(1, 0, 0, 1, 0, -30)';
+  width: 30px;
+  height: 30px;
+  font-size: 35px;  
+}
+
+.carousel-control .glyphicon-chevron-right, .carousel-control .icon-next:hover {
+  
+  /* height: 5.5%; */
+  top: 50%;
+  transform: 'matrix(1, 0, 0, 1, 0, -30)';
+}

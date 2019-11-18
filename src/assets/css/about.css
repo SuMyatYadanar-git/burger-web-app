@@ -1,0 +1,87 @@
+ /* Box shadow helper */
+ @mixin BoxShadowHelper($level: 1){
+    @if $level == 1 {
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .16), 0 2px 10px 0 rgba(0, 0, 0, .12);
+    }
+    @if $level == 2 {
+      box-shadow: 0 5px 11px 0 rgba(0, 0, 0, .18), 0 4px 15px 0 rgba(0, 0, 0, .15);
+    }
+  }
+  a {transition: .25s all;}
+  .card {
+    overflow: hidden;
+    @include BoxShadowHelper(1);
+    transition: .25s box-shadow;
+    &:focus,
+    &:hover {@include BoxShadowHelper(2);
+    }
+  }
+  .card-inverse .card-img-overlay {
+    background-color: rgba(#333,.85);
+    border-color: rgba(#333,.85);
+  }
+  /* 
+The container box is relative so we can position stuff inside of it 
+*/
+.image-box {
+  position: relative;
+} 
+
+.image-box__background,
+.image-box__overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+/* 
+The background image div sizes and positions the background itself.
+It's also at the bottom-most position in our "div stack" (z-index 1)
+
+We set the image url via a CSS custom property, that's set via the style attribute in our HTML
+*/
+
+/* .image-box__background {
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-image: var(--image-url);  
+  z-index: 1
+} */
+
+/* 
+The overlay div is just a colored element with some opacity.
+It's above the background image in our stack, so it appears to 
+darken the image 
+*/
+.image-box__overlay {
+  /* background: rgba(7, 0, 0, 0.5);      */
+  background: rgba(33, 28, 6, 0.5);
+  z-index: 2;
+}
+
+/* 
+The content div is at the top of our stack. 
+We'd probably add some padding or flexbox properties here as well, 
+to place the content appropriately
+*/
+.image-box__content {
+  position: relative;  
+  z-index: 3;    
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* just for the demo */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+h1 {
+  font-size: 30px;
+}
