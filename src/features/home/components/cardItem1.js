@@ -14,7 +14,7 @@ import './slider.css'
 
 
 const CardItem = props => {
-    const { media } = props
+    const { media, category } = props  
 
     const settings = {
         dots: false,
@@ -30,20 +30,28 @@ const CardItem = props => {
         className: 'slides h-100',
         arrows: (media.desktop || media.tablet) ? true : false
     }
-
+    // console.log(category.payload)
     return (
         <div className="  container-fluid " style={{ position: 'relative', zIndex: 5, backgroundColor: 'white' }}>
             <div className="container">
-                <div className=" text-center text-muted py-4 px-2 " style={{ fontFamily: 'Volkhov',lineHeight:1.5, fontSize: media.desktop ? 20 : media.tablet ? 17 : 15}}>
-                    <span className="font-weight-bold" style={{fontSize:25}}>Choose your passion!</span>
+                <div className=" text-center text-muted py-4 px-2 " style={{ fontFamily: 'Volkhov', lineHeight: 1.5, fontSize: media.desktop ? 20 : media.tablet ? 17 : 15 }}>
+                    <span className="font-weight-bold" style={{ fontSize: 25 }}>Choose your passion!</span>
                     <p >Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam. Lorem ipsum dolor sit amet,</p>
                 </div>
 
                 <div id="box" style={{ overflow: 'hidden', scrollBehavior: 'smooth' }}>
 
-                    {/* <div className="d-flex " > */}
                     <Slider {...settings}>
-                        <div className="px-1">
+
+                        <div className="px-1" >
+                            {
+                                category.map((v, k) =>                                    
+                                        <BurgerType img={v.c_img} title={v.c_name} media={media} />                                    
+                                )
+                            }
+                        </div>
+
+                        {/* <div className="px-1">
                             <BurgerType img={bg1} title={"vegetables"} media={media} />
                         </div>
                         <div className="px-1">
@@ -60,7 +68,7 @@ const CardItem = props => {
                         </div>
                         <div className="px-1">
                             <BurgerType img={bg3} title={"cheesy burger"} media={media} />
-                        </div>
+                        </div> */}
                     </Slider>
                     {/* </div> */}
                 </div>
@@ -81,7 +89,7 @@ const BurgerType = ({ img, title, media }) => {
             <img className="img-fluid " src={img} alt="burger-category" />
             <div className="overlay" >
                 <Link to={route.burger}
-                    style={{ textDecoration: 'none',fontFamily: 'Volkhov', fontSize: media.desktop ? 20 : media.tablet ? 16 : 11 }}><span>{title}</span></Link>
+                    style={{ textDecoration: 'none', fontFamily: 'Volkhov', fontSize: media.desktop ? 20 : media.tablet ? 16 : 11 }}><span>{title}</span></Link>
             </div>
         </div>
 
