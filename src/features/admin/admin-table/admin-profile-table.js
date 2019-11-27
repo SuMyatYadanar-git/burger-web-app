@@ -18,6 +18,7 @@ const AdminProfileTable = props => {
             else setProfileData(data)
         })
     }, [])
+    if (profile.length === 0) return null;
 
     const data = profile.map(v => ({
         id: v.id,
@@ -29,7 +30,7 @@ const AdminProfileTable = props => {
     }))
 
     return (
-        <div>
+        <div className="container-fluid">
             {/* <div className="d-flex justify-content-end p-2 mx-5">
                 <button type="button" className="btn btn-outline-success " style={{ width: 50, height: 30 }} > <i className="fas fa-plus" /> </button>
             </div> */}
@@ -60,7 +61,9 @@ const columns = memoize((media, handleDeleteProduct, handleEditProduct) =>
             name: 'Address',
             selector: 'address',
             sortable: true,
-            // minWidth: '200px',
+            minwidth: '80px',
+
+
             // <div style={{ color: '#153784', fontWeight: 700, textAlign: 'center' }}>{row.image}</div>
         },
         {
@@ -68,36 +71,39 @@ const columns = memoize((media, handleDeleteProduct, handleEditProduct) =>
             selector: 'name',
             sortable: true,
             right: true,
-            // minWidth: '120px',
+            minwidth: '80px'
+
         },
         {
             name: 'Picture',
             selector: 'img',
             sortable: true,
             right: true,
+
             cell: row =>
-                <img src={row.img} className="img-fluid img-thumbnail w-25 h-100 "   />
-            // minWidth: '120px',
+                <img src={row.img} className="img-fluid img-thumbnail w-25 h-100 " />
+
         },
         {
             name: ' Mail',
             selector: 'mail',
             sortable: true,
             right: true,
-            // minWidth: '250px',
+
         },
         {
             name: ' Phon No',
             selector: 'phone',
             sortable: true,
             right: true,
-            // minWidth: '250px',
+
+
         },
         {
             name: '',
             selector: '',
             right: true,
-            // minWidth: '200px',
+            minwidth: '200px',
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
@@ -117,7 +123,7 @@ const columns = memoize((media, handleDeleteProduct, handleEditProduct) =>
             name: '',
             selector: '',
             right: true,
-            // minWidth: '200px',
+            minwidth: '100px',
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,

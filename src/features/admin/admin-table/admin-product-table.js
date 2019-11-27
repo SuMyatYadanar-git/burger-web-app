@@ -18,6 +18,7 @@ const AdminProductTable = props => {
             else setProduct(data)
         })
     }, [])
+    if (products.length === 0) return null;
 
     const data = products.map(v => ({
         id: v.p_id,
@@ -28,6 +29,7 @@ const AdminProductTable = props => {
     })
     )
 
+
     const handleDeleteProduct = (row) => {
         console.log(row)
     }
@@ -37,7 +39,7 @@ const AdminProductTable = props => {
 
 
     return (
-        <div className="container-fluid p-0">
+        <div className="container-fluid">
             {/* <div className="d-flex justify-content-end p-2 mx-5">
                 <button type="button" className="btn btn-outline-success " style={{ width: 50, height: 30}} > <i className="fas fa-plus"/> </button>
             </div> */}
@@ -68,9 +70,11 @@ const columns = memoize((media, handleDeleteProduct, handleEditProduct) =>
             name: 'Image',
             selector: 'image',
             sortable: true,
-            // minWidth: '200px',
+             minWidth: '200px',
             cell: row =>
-                <img src={row.image} className="img-fluid img-thumbnail w-25 h-100" width={100} height={200} />
+            // <div className="border border-danger"> 
+                <img src={row.image} className="img-fluid img-thumbnail w-25 h-100 " width={100} height={200} />
+            //   </div>
             // <div style={{ color: '#153784', fontWeight: 700, textAlign: 'center' }}>{row.image}</div>
         },
         {
@@ -98,7 +102,7 @@ const columns = memoize((media, handleDeleteProduct, handleEditProduct) =>
             name: '',
             selector: '',
             right: true,
-            // minWidth: '200px',
+             minWidth: '200px',
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
@@ -118,7 +122,7 @@ const columns = memoize((media, handleDeleteProduct, handleEditProduct) =>
             name: '',
             selector: '',
             right: true,
-            // minWidth: '200px',
+             minWidth: '100px',
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,

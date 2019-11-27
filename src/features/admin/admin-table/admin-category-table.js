@@ -27,20 +27,22 @@ const AdminCategoryTable = props => {
     }))
 
     const handleDeleteCategory = (row) => {
-        deleteAllCategory(row.id, (error, data) => {
-            if (error) console.log('fetching error', error)
-            else {
-                data.status === true && alert(data.message)
-                setCategory(data.payload)
-            }
-        })
+        console.log(row)
+        // for console about modal
+        // deleteAllCategory(row.id, (error, data) => {
+        //     if (error) console.log('fetching error', error)
+        //     else {
+        //         data.status === true && alert(data.message)
+        //         setCategory(data.payload)
+        //     }
+        // })
     }
     const handleEditCategory = (row) => {
         console.log(row)
     }
 
     return (
-        <div>
+        <div className="container-fluid">
             {/* <nav aria-label="breadcrumb" className="d-flex justify-content-between align-items-center bg-dark ">
                 <ol class="breadcrumb " style={{ backgroundColor: 'transparent', fontSize: '1.5rem', color: '#fff' }}>
                     <li class="breadcrumb-item" aria-current="page">{"current-place"}</li>
@@ -75,7 +77,7 @@ const columns = memoize((media, handleDeleteCategory, handleEditCategory) =>
             name: 'Image',
             selector: 'image',
             sortable: true,
-            // minWidth: '200px',
+            //  minWidth: '200px',
             cell: row =>
                 <img src={row.image} className="img-fluid img-thumbnail w-25 h-100" width={100} height={200} />
             // <div style={{ color: '#153784', fontWeight: 700, textAlign: 'center' }}>{row.image}</div>
@@ -85,13 +87,12 @@ const columns = memoize((media, handleDeleteCategory, handleEditCategory) =>
             selector: 'name',
             sortable: true,
             right: true,
-            // minWidth: '120px',
         },
         {
             name: '',
             selector: '',
             right: true,
-            // minWidth: '200px',
+            minWidth: '200px',
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
@@ -116,7 +117,7 @@ const columns = memoize((media, handleDeleteCategory, handleEditCategory) =>
             name: '',
             selector: '',
             right: true,
-            // minWidth: '200px',
+            minWidth: '100px',
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,

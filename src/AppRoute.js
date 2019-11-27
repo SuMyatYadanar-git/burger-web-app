@@ -14,17 +14,17 @@ import ToTop from './features/app/toTopButton'
 
 import LoginContainer from './features/admin/login/loginContainer'
 import adminHomeContainer from './features/admin/admin-home/adminHomeContainer'
-import categoryTable from './features/admin/admin-table/categoryTable'
 import adminCategoryTable from './features/admin/admin-table/admin-category-table'
 import adminProductTable from './features/admin/admin-table/admin-product-table'
 import AdminProfileTable from './features/admin/admin-table/admin-profile-table'
 import AdminNavbar from './features/admin/admin-home/components/adminNavbar'
+import AdminSetting from './features/admin/admin-table/admin-setting'
 // import BurgerImage from './Images/burgerBackground/bg1.jpg'
 
 const AppRoute = props => {
     const { history } = props
-    const routeName = ['/admin', '/admin-home', '/admin-category', '/admin-product', '/admin-profile']
-    const routeAdminName = ['/', '/burger', '/about', '/map', '/burgerInfo', '/contant','/admin']
+    const routeName = ['/admin', '/admin-home', '/admin-category', '/admin-product', '/admin-profile','/user']
+    const routeAdminName = ['/', '/burger', '/about', '/map', '/burgerInfo', '/contant','/admin',]
     return (
         <Router>
             {
@@ -44,6 +44,7 @@ const AppRoute = props => {
                         <Route path={`/${route.adminProducts}`} component={adminProductTable} />
                         <Route path={`/${route.adminCategory}`} component={adminCategoryTable} />
                         <Route path={`/${route.adminHome}`} component={adminHomeContainer} />
+                        <Route path='/user' component={AdminSetting}/>
                         <Redirect to={`${route.home}`} />
                     </Switch>
                     {!routeName.includes(history.location.pathname) && <Footer />}
