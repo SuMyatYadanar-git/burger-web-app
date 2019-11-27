@@ -35,7 +35,7 @@ const MyButton = props => {
   return (
     <div>
       <button
-        className={`btn border ${className}}`}
+        className={` border ${className}}`}
         style={{ ...defaultStyle, ...userStyle,fontSize:'1.8rem' }}
         onClick={onClick}
         onMouseOver={_handleHover}

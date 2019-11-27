@@ -18,17 +18,20 @@ import categoryTable from './features/admin/admin-table/categoryTable'
 import adminCategoryTable from './features/admin/admin-table/admin-category-table'
 import adminProductTable from './features/admin/admin-table/admin-product-table'
 import AdminProfileTable from './features/admin/admin-table/admin-profile-table'
+import AdminNavbar from './features/admin/admin-home/components/adminNavbar'
 // import BurgerImage from './Images/burgerBackground/bg1.jpg'
 
 const AppRoute = props => {
     const { history } = props
-    const routeName = ['/admin', '/admin-home', '/admin-category','/admin-product','/admin-profile']
+    const routeName = ['/admin', '/admin-home', '/admin-category', '/admin-product', '/admin-profile']
+    const routeAdminName = ['/', '/burger', '/about', '/map', '/burgerInfo', '/contant','/admin']
     return (
         <Router>
             {
                 <div>
                     {!routeName.includes(history.location.pathname) && <ToTop />}
                     {!routeName.includes(history.location.pathname) && <Navbar />}
+                    {!routeAdminName.includes(history.location.pathname) && <AdminNavbar />}
                     <Switch>
                         <Route path={`/${route.admin}`} component={LoginContainer} />
                         <Route path={`/${route.delivery}`} component={DeliverContainer} />

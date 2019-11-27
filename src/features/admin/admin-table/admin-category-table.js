@@ -4,7 +4,7 @@ import { memoize } from 'react-data-table-component'
 
 import tableTheme from "../../../common/TableThems"
 import KmTable from '../../../common/KmTable'
-// import Mybtn from '../../../common/myButton'
+import Mybtn from '../../../common/myButton'
 
 import { getAllCategory, deleteAllCategory } from '../../../network/categoryFetcher'
 
@@ -41,6 +41,15 @@ const AdminCategoryTable = props => {
 
     return (
         <div>
+            {/* <nav aria-label="breadcrumb" className="d-flex justify-content-between align-items-center bg-dark ">
+                <ol class="breadcrumb " style={{ backgroundColor: 'transparent', fontSize: '1.5rem', color: '#fff' }}>
+                    <li class="breadcrumb-item" aria-current="page">{"current-place"}</li>
+                </ol>
+                <div className="p-2 mx-5 ">
+                    <button type="button" className="btn btn-outline-success " style={{ width: 50, height: 30 }} > <i className="fas fa-plus" /> </button>
+                </div>
+            </nav> */}
+
             <KmTable
                 columns={columns(media, handleDeleteCategory, handleEditCategory)}
                 data={data}
@@ -68,7 +77,7 @@ const columns = memoize((media, handleDeleteCategory, handleEditCategory) =>
             sortable: true,
             // minWidth: '200px',
             cell: row =>
-                <img src={row.image} className=" img-thumbnail" width={100} height={200} />
+                <img src={row.image} className="img-fluid img-thumbnail w-25 h-100" width={100} height={200} />
             // <div style={{ color: '#153784', fontWeight: 700, textAlign: 'center' }}>{row.image}</div>
         },
         {
@@ -99,7 +108,7 @@ const columns = memoize((media, handleDeleteCategory, handleEditCategory) =>
                         className="p-3 bg-primary text-light"
                     >
                         EDIT
-                        </div>
+                    </div>
                 )
             }
         },
@@ -120,7 +129,7 @@ const columns = memoize((media, handleDeleteCategory, handleEditCategory) =>
                     // />
                     <div
                         onClick={() => handleDeleteCategory(row)}
-                        style={{ textAlign: 'right', cursor: 'pointer', color: '#a3a3a2' }}
+                        style={{ textAlign: 'right', cursor: 'pointer', color: '#a3a3a2', borderRadius: 6 }}
                         className="p-3 bg-danger text-light"
                     >
                         DELETE

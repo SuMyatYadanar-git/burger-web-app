@@ -1,7 +1,7 @@
 import { API_URL } from './api'
 
 export const loginFetcher = (info, callback) => {
-    fetch(API_URL +'/login', {
+    fetch(API_URL + '/login', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -15,7 +15,26 @@ export const loginFetcher = (info, callback) => {
             else return res.json()
         })
         .then(data => {
-            callback(null,data)
+            callback(null, data)
         })
-        .catch(error => callback(null,error))
+        .catch(error => callback(null, error))
+}
+
+export const GetloginData = (callback) => {
+    fetch(API_URL + '/login', {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        cache: 'no-cache'
+    })
+        .then(res => {
+            if (res.status !== 200) throw res.json()
+            else return res.json()
+        })
+        .then(data => {
+            callback(null, data.payload)
+        })
+        .catch(error => callback(null, error))
+
 }

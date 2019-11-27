@@ -3,6 +3,7 @@ export default media => ({
         height: '0px',
     },
     header: {
+        fontSize:'1.8rem',
         // fontSize: fsc(media, 15) + 'px',
         fontWeight: '500',
         fontColor: '#a3a3a2',
@@ -19,6 +20,7 @@ export default media => ({
     rows: {
         // default || spaced
         spacing: 'default',
+        fontSize:'1.5rem' ,
         // fontSize: fsc(media, 16) + 'px',
         fontColor: '#343434',
         backgroundColor: "white",
