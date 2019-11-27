@@ -5,12 +5,37 @@ import { memoize } from 'react-data-table-component'
 import tableTheme from "../../../common/TableThems"
 import KmTable from '../../../common/KmTable'
 import Mybtn from '../../../common/myButton'
+import KmModal from '../../../common/KmModal'
 
 import { getAllCategory, deleteAllCategory } from '../../../network/categoryFetcher'
 
+import { IMG_SERVER } from '../../../network/api'
+
+const customStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)'
+    }
+};
+
+const initialSelectedRow = { id: null, image: null, name: null }
+
 const AdminCategoryTable = props => {
     const [category, setCategory] = useState([])
+    const [modalOpen, setModalOpen] = useState(false)
+    const [selectedRow, setSelectedRow] = useState(initialSelectedRow)
     const { media } = props
+
+    const openModal = () => setModalOpen(true)
+    const closeModal = () => {
+        setModalOpen(false);
+        setSelectedRow(initialSelectedRow);
+    }
+
 
     useEffect(() => {
         getAllCategory((error, data) => {
@@ -38,8 +63,9 @@ const AdminCategoryTable = props => {
         // })
     }
     const handleEditCategory = (row) => {
-        console.log(row)
-    }
+        openModal()
+        setSelectedRow(row)
+    }    
 
     return (
         <div className="container-fluid">
@@ -66,6 +92,18 @@ const AdminCategoryTable = props => {
                 paginationPerPage={5}
                 customPagination={true}
             />
+
+            <KmModal
+                isOpen={modalOpen}
+                // onAfterOpen={this.afterOpenModal}
+                onRequestClose={closeModal}
+                style={customStyles}
+                contentLabel="Example Modal"
+            >
+                <h3>{selectedRow.name}</h3>
+                <button onClick={closeModal}>close</button>
+            </KmModal>
+
         </div>
     )
 }
@@ -79,7 +117,7 @@ const columns = memoize((media, handleDeleteCategory, handleEditCategory) =>
             sortable: true,
             //  minWidth: '200px',
             cell: row =>
-                <img src={row.image} className="img-fluid img-thumbnail w-25 h-100" width={100} height={200} />
+                <img src={IMG_SERVER + '/uploads/' + row.image} className="img-fluid img-thumbnail w-25 h-100" width={100} height={200} />
             // <div style={{ color: '#153784', fontWeight: 700, textAlign: 'center' }}>{row.image}</div>
         },
         {

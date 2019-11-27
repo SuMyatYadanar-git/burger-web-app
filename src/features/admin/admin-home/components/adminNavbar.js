@@ -15,7 +15,7 @@ const AdminNavbar = props => {
             if (error) console.error('fetch error', error)
             else setloginNmae(data[0].user_name)
         })
-    }, '')
+    }, [])
 
     return (
         <div className="container-fluid p-0">
