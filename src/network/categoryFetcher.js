@@ -4,6 +4,7 @@ export const getAllCategory = (callback) => {
     fetch(API_URL + '/category', {
         method: 'GET',
         headers: {
+            // "Authorization": 'Bearer ' + token,
             "Content-Type": "application/json"
         },
         cache: 'no-cache'
@@ -18,11 +19,11 @@ export const getAllCategory = (callback) => {
         .catch(error => callback(null, error))
 }
 
-export const deleteAllCategory = (id, callback) => {
-    console.log(id)
+export const deleteAllCategory = ( id, callback) => {
     fetch(API_URL + `/category/${id}`, {
         method: 'DELETE',
         headers: {
+            // "Authorization": 'Bearer ' + token,
             "Content-Type": "application/json"
         },
         cache: 'no-cache'

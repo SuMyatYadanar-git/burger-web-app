@@ -1,29 +1,34 @@
 import React, { useState } from 'react'
 import '../../../App.css'
-
+import { withRouter } from 'react-router-dom'
 import MyButton from '../../../common/myButton'
 import * as route from '../../../config/route.config'
-import {loginFetcher} from '../../../network/loginFetcher'
+import { loginFetcher } from '../../../network/loginFetcher'
 
 const LoginContainer = props => {
     const [name, setName] = useState('')
     const [pwd, setPwd] = useState('')
     const [pwdView, setpwdView] = useState(false)
 
-  const onClickLog = () => {
-        let info = { name,pwd }
-        loginFetcher(info, (error,data) => {
-          if (error) console.log(error)
-         else if(data.success === true) {
-             window.location.href=  `/${route.adminHome}`
-         }
-         else{
-             alert('incorrect username and password!')
-             setName('')
-             setPwd('')
-         }
-        })  
-      }
+    const onClickLog = (e) => {
+        e.preventDefault()
+        let info = { name, pwd }
+        loginFetcher(info, (error, data) => {
+            if (error) console.log(error)
+            else if (data.success === true) {
+                localStorage.setItem('data', JSON.stringify(data))
+                props.history.replace(`/${route.adminProfile}`)
+                // window.location.href = `/${route.adminHome}`              
+            }
+            else {
+                alert('incorrect username and password!')
+                setName('')
+                setPwd('')
+            }
+        })
+    }
+
+    // if (localStorage.getItem('data') !== null) 
 
     return (
         <div className="container-fluid p-0">
@@ -41,7 +46,7 @@ const LoginContainer = props => {
                                 <h4 className="pt-2 pb-3">Login to your Account</h4>
                             </div>
                             {/* onSubmit={(e) => { onClickLog(); e.preventDefault() }} */}
-                            <form  onSubmit={(e) => { onClickLog(); e.preventDefault() }}>
+                            <form onSubmit={(e) => { onClickLog(e) }}>
                                 <div className="form-group pt-3">
                                     <label style={{ fontSize: 18 }}>Name:</label>
                                     {/* <input type="text" className="form-control" pattern="^[0]{1}[9]{1}[0-9]{9}$" required /> */}
@@ -81,13 +86,13 @@ const LoginContainer = props => {
                                         text="login"
                                         type="submit"
                                         className="btn-outline-warning btn-block"
-                                        // style={{ width: 200 }}
-                                       
+                                    // style={{ width: 200 }}
+
                                     />
                                 </div>
-                                <div className="d-flex justify-content-center pt-3 pb-2">
+                                {/* <div className="d-flex justify-content-center pt-3 pb-2">
                                     <span style={{ textAlign: 'center', cursor: 'pointer' }}>Forget Password?</span>
-                                </div>
+                                </div> */}
 
                             </form>
                         </div>
@@ -191,4 +196,4 @@ const LoginContainer = props => {
     )
 }
 
-export default LoginContainer
+export default withRouter(LoginContainer)

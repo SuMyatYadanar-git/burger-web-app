@@ -1,16 +1,35 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, } from 'react'
+
+import { changePwd } from '../../../network/userFetcher'
 
 
-const AdminSetting = props => {
-    const [pwd, setPwd] = useState('')
+const AdminUserSetting = props => {
     const [Npwd, setNpwd] = useState('')
     const [Cpwd, setCpwd] = useState('')
     const [name, setName] = useState('')
 
+    const token = JSON.parse(localStorage.getItem('data')).token
+    const id = JSON.parse(localStorage.getItem('data')).payload[0].id
+
+    const _onChangePwd = () => {
+        Npwd.length < 3 && alert('password must be above 4character at least!')
+        if (Npwd === Cpwd) {
+            let info = { Npwd, id, token }
+            changePwd(info, (error, data) => {
+                if (error) console.log('fetching error', error)
+                else {
+                    data.success === true && alert(data.message)
+                }
+            })
+        } else {
+            alert('new passwrod and confirm password must be the same!')
+            console.log('db error')
+        }
+    }
+
     return (
-        // onSubmit={this._onChangePwd} 
         <div className="container">
-            <form className="m-0 px-0 py-5 border" style={{ fontSize: '1.8rem' }} >
+            <form className="m-0 px-0 py-5 border" onSubmit={(e) => { _onChangePwd(); e.preventDefault() }} style={{ fontSize: '1.8rem' }} >
                 {/* <div className="form-group d-flex justify-content-center">
                     <label className="col-lg-2" >Password</label>
                     <input type="password"
@@ -43,7 +62,7 @@ const AdminSetting = props => {
                 <div className="form-group d-flex justify-content-center">
                     <label className="col-lg-2" ></label>
                     <input className="btn btn-warning form-control bg-warning  col-lg-5"
-                        style={{ height: '3rem' ,fontSize:'1.5rem'}}
+                        style={{ height: '3rem', fontSize: '1.5rem' }}
                         type="submit"
                     />
 
@@ -56,7 +75,7 @@ const AdminSetting = props => {
                     <input type="text"
                         name="update-name"
                         className="form-control col-lg-5"
-                        style={{ height: '3rem',fontSize:'1.8rem' }}
+                        style={{ height: '3rem', fontSize: '1.8rem' }}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required />
@@ -65,13 +84,12 @@ const AdminSetting = props => {
                     <label className="col-lg-2" ></label>
                     <input
                         className="btn btn-warning form-control bg-warning  col-lg-5"
-                        style={{ height: '3rem',fontSize:'1.5rem' }}
+                        style={{ height: '3rem', fontSize: '1.5rem' }}
                         type="submit"
                     />
-
                 </div>
             </form>
         </div>
     )
 }
-export default AdminSetting
+export default AdminUserSetting

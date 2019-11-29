@@ -6,6 +6,7 @@ import tableTheme from "../../../common/TableThems"
 import KmTable from '../../../common/KmTable'
 import Mybtn from '../../../common/myButton'
 
+import { IMG_SERVER } from '../../../network/api'
 import { getAllProduct } from '../../../network/productFetcher'
 
 const AdminProductTable = props => {
@@ -40,10 +41,6 @@ const AdminProductTable = props => {
 
     return (
         <div className="container-fluid">
-            {/* <div className="d-flex justify-content-end p-2 mx-5">
-                <button type="button" className="btn btn-outline-success " style={{ width: 50, height: 30}} > <i className="fas fa-plus"/> </button>
-            </div> */}
-            {/* <div className="d-flex justify-content-end pt-2"> <Mybtn text="ADD_NEW" className="btn btn-outline-success" width={100} /></div> */}
             <KmTable
                 columns={columns(media, handleDeleteProduct, handleEditProduct)}
                 data={data}
@@ -70,10 +67,10 @@ const columns = memoize((media, handleDeleteProduct, handleEditProduct) =>
             name: 'Image',
             selector: 'image',
             sortable: true,
-             minWidth: '200px',
+            minWidth: '200px',
             cell: row =>
-            // <div className="border border-danger"> 
-                <img src={row.image} className="img-fluid img-thumbnail w-25 h-100 " width={100} height={200} />
+                // <div className="border border-danger"> 
+                <img  src={IMG_SERVER + '/uploads/' + row.image} className=" img-thumbnail " width={120} />
             //   </div>
             // <div style={{ color: '#153784', fontWeight: 700, textAlign: 'center' }}>{row.image}</div>
         },
@@ -82,27 +79,27 @@ const columns = memoize((media, handleDeleteProduct, handleEditProduct) =>
             selector: 'name',
             sortable: true,
             right: true,
-            // minWidth: '120px',
+            //  minWidth: '120px',
         },
         {
             name: 'Product Price',
             selector: 'price',
             sortable: true,
             right: true,
-            // minWidth: '120px',
+            //  minWidth: '120px',
         },
         {
             name: ' Product Description',
             selector: 'description',
             sortable: true,
             right: true,
-            minWidth: '250px',
+            // minWidth: '250px',
         },
         {
             name: '',
             selector: '',
             right: true,
-             minWidth: '200px',
+            minWidth: '200px',
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
@@ -122,7 +119,7 @@ const columns = memoize((media, handleDeleteProduct, handleEditProduct) =>
             name: '',
             selector: '',
             right: true,
-             minWidth: '100px',
+            minWidth: '100px',
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,

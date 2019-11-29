@@ -1,19 +1,36 @@
 import React, { useState, useEffect } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 
-import { GetloginData } from '../../../../network/loginFetcher'
+import { GetloginData } from '../../../../network/userFetcher'
 import KmLogo from '../../../../Images/kumo_Logo.png'
-
+import KmModal from '../../../../common/KmModal'
+import * as route from '../../../../config/route.config'
 
 const AdminNavbar = props => {
     const { history } = props
-
     const [loginName, setloginNmae] = useState('admin')
+    const [modalOpen, setModalOpen] = useState(false)
+
+    const token = JSON.parse(localStorage.getItem('data')).token
+    const id = JSON.parse(localStorage.getItem('data')).payload[0].id
+
+    const openModal = () => setModalOpen(true)
+    const closeModal = () => {
+        setModalOpen(false);
+        // setSelectedRow(initialSelectedRow);
+    }
+
+    const _onClickLogout = () => {
+        localStorage.removeItem('data');
+        props.history.replace(`/${route.admin}`)
+    }
 
     useEffect(() => {
-        GetloginData((error, data) => {
+        GetloginData(id, (error, data) => {
             if (error) console.error('fetch error', error)
-            else setloginNmae(data[0].user_name)
+            else setloginNmae('admin')
+            // setloginNmae(data[0].user_name)
+            // console.log(data)
         })
     }, [])
 
@@ -34,8 +51,12 @@ const AdminNavbar = props => {
                         <div className="dropdown-divider" />
                         <Link to='/user' style={{ textDecoration: 'none' }}> <div className="dropdown-item">User</div></Link>
                         <div className="dropdown-divider" />
-                        <div className="dropdown-item">Log Out</div>
-
+                        <div className="dropdown-item"
+                            onClick={() => _onClickLogout()}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            Log Out
+                             </div>
                     </div>
                 </div>
 
@@ -46,9 +67,23 @@ const AdminNavbar = props => {
                     <li className="breadcrumb-item text-dark" aria-current="page">{history.location.pathname.slice(1)}</li>
                 </ol>
                 <div className="p-2 mx-5 ">
-                    <button type="button" className="btn btn-outline-success " style={{ width: 100, height: 30, fontSize: '1.5rem', }} >
+                    <button type="button"
+                        className="btn btn-outline-success "
+                        style={{ width: 100, height: 30, fontSize: '1.5rem', }}
+                        onClick={() => openModal()}
+                    >
                         <i className="fas fa-plus" /> <span className="px-2">Add New </span>
                     </button>
+                    <KmModal
+                        isOpen={modalOpen}
+                        // onAfterOpen={this.afterOpenModal}
+                        onRequestClose={closeModal}
+                        // style={customStyles}
+                        contentLabel="Example Modal"
+                    >
+                        <h3>{`Regirster On`}</h3>
+                        <button onClick={closeModal}>close</button>
+                    </KmModal>
                 </div>
             </nav>
 

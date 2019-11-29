@@ -1,9 +1,10 @@
 import { API_URL } from './api'
 
-export const getAllProfile = (callback) => {
+export const getAllProfile = (token, callback) => {
     fetch(API_URL + '/profile', {
         method: 'GET',
         headers: {
+            "Authorization": 'Bearer ' + token,
             "Content-Type": "application/json"
         },
         cache: 'no-cache'
