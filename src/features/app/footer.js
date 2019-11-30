@@ -1,13 +1,30 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import BurgerLogo from '../../assets/icons/Burger'
 import KumoIcon from '../../Images/kumo_Logo.png'
 import * as Colors from '../../config/color.config'
 import { withMedia } from 'react-media-query-hoc'
 import BurgerImage from '../../Images/burgerBackground/bg1.jpg'
 
+import { getAllProfile } from '../../network/profileFetcher'
+
 
 const Footer = props => {
     const { media } = props
+    const [infoData, setinfoData] = useState([])
+
+    useEffect(() => {
+        getAllProfile((error, data) => {
+            if (error) console.log('fetching error', error)
+            else {
+                const address = data[0].address
+                const mail = data[0].mail
+                const phone = data[0].phone
+                setinfoData({ address, mail, phone })
+            }
+        })
+    }, [])
+
+    
     return (
         <div className='container-fluid ' style={{ backgroundImage: `url(${BurgerImage})` }}>
             <div className='container text-light pt-5' style={{ fontSize: media.desktop ? 16 : media.tablet ? 16 : 13, textAlign: 'left' }}>
@@ -28,9 +45,15 @@ const Footer = props => {
                     </div>
                         <table>
                             <tbody>
-                                <tr style={{ height: '30px' }}><td style={{ width: '30px' }}><i className="fas fa-map-marker-alt text-warning" /></td><td>198 West 21th Street, Suite 721</td></tr>
-                                <tr style={{ height: '30px' }}><td><i className="fas fa-envelope text-warning" /></td><td>mail@qodeinteractive.com</td></tr>
-                                <tr style={{ height: '30px' }}><td><i className="fas fa-phone-alt text-warning" /></td><td>198 West 21th Street, Suite 721</td></tr>
+                                <tr style={{ height: '30px' }}><td style={{ width: '30px' }}><i className="fas fa-map-marker-alt text-warning" /></td>
+                                    <td>{infoData.address}</td>
+                                </tr>
+                                <tr style={{ height: '30px' }}><td><i className="fas fa-envelope text-warning" /></td>
+                                    <td>{infoData.mail}</td>
+                                </tr>
+                                <tr style={{ height: '30px' }}><td><i className="fas fa-phone-alt text-warning" /></td>
+                                    <td>{infoData.phone}</td>
+                                </tr>
                             </tbody>
 
                         </table>
