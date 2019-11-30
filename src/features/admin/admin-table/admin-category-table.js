@@ -28,7 +28,7 @@ const AdminCategoryTable = props => {
     const [modalOpen, setModalOpen] = useState(false)
     const [selectedRow, setSelectedRow] = useState(initialSelectedRow)
     const { media } = props
-    const token = JSON.parse(localStorage.getItem('data')).token;
+    // const token = JSON.parse(localStorage.getItem('data')).token;
 
     const openModal = () => setModalOpen(true)
     const closeModal = () => {
@@ -37,11 +37,17 @@ const AdminCategoryTable = props => {
     }
 
     useEffect(() => {
-        getAllCategory( (error, data) => {
-            if (error) console.error(error)
-            else setCategory(data)
-        })
+        const userData = JSON.parse(localStorage.getItem('data'))
+        if (userData === null) {
+            props.history.replace('/')
+        } else {
+            getAllCategory((error, data) => {
+                if (error) console.error(error)
+                else setCategory(data)
+            })
+        }
     }, [])
+
     if (category.length === 0) return null;
 
     const data = category.map(v => ({
@@ -49,7 +55,7 @@ const AdminCategoryTable = props => {
         image: v.c_img,
         name: v.c_name
     }))
- 
+
     const handleDeleteCategory = (row) => {
         console.log(row)
         openModal()

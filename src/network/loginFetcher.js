@@ -1,8 +1,8 @@
 import { API_URL } from './api'
 
 export const loginFetcher = (info, callback) => {
-  
-    const user_name= info.name
+
+    const user_name = info.name
     const pwd = info.pwd
     fetch(API_URL + '/login', {
         method: 'POST',
@@ -10,7 +10,7 @@ export const loginFetcher = (info, callback) => {
             "Content-Type": "application/json"
         },
         cache: 'no-cache',
-        body: JSON.stringify({ user_name,pwd })
+        body: JSON.stringify({ user_name, pwd })
 
     })
         .then(res => {

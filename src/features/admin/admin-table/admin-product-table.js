@@ -7,18 +7,25 @@ import KmTable from '../../../common/KmTable'
 import Mybtn from '../../../common/myButton'
 
 import { IMG_SERVER } from '../../../network/api'
-import { getAllProduct } from '../../../network/productFetcher'
+import { getAllProduct, deleteAllProduct } from '../../../network/productFetcher'
 
 const AdminProductTable = props => {
     const { media } = props
     const [products, setProduct] = useState([])
 
+
     useEffect(() => {
-        getAllProduct((error, data) => {
-            if (error) console.log("fetch errror", error)
-            else setProduct(data)
-        })
+        const userData = JSON.parse(localStorage.getItem('data'))
+        if (userData === null) {
+            props.history.replace('/')
+        } else {
+            getAllProduct((error, data) => {
+                if (error) console.log("fetch errror", error)
+                else setProduct(data)
+            })
+        }
     }, [])
+
     if (products.length === 0) return null;
 
     const data = products.map(v => ({
@@ -30,9 +37,21 @@ const AdminProductTable = props => {
     })
     )
 
-
     const handleDeleteProduct = (row) => {
-        console.log(row)
+        const id = row.id
+        const token = JSON.parse(localStorage.getItem('data')).token
+        let info={
+            id:id,
+            token: token
+        }
+       
+        deleteAllProduct(info, (error, data) => {
+            if (error) console.log('fetching error', error)
+            else {
+                data.success === true && alert('delete successfully')
+                setProduct(data.payload)
+            }
+        })
     }
     const handleEditProduct = (row) => {
         console.log(row)
@@ -70,7 +89,7 @@ const columns = memoize((media, handleDeleteProduct, handleEditProduct) =>
             minWidth: '200px',
             cell: row =>
                 // <div className="border border-danger"> 
-                <img  src={IMG_SERVER + '/uploads/' + row.image} className=" img-thumbnail " width={120} />
+                <img src={IMG_SERVER + '/uploads/' + row.image} className=" img-thumbnail " width={120} />
             //   </div>
             // <div style={{ color: '#153784', fontWeight: 700, textAlign: 'center' }}>{row.image}</div>
         },

@@ -6,23 +6,40 @@ import tableTheme from "../../../common/TableThems"
 import KmTable from '../../../common/KmTable'
 // import Mybtn from '../../../common/myButton'
 import { IMG_SERVER } from '../../../network/api'
-import { getAllProfile } from '../../../network/profileFetcher'
+import { getAllProfile, deleteAllProfile } from '../../../network/profileFetcher'
 
 const AdminProfileTable = props => {
     const { media } = props
     const [profile, setProfileData] = useState([])
 
-    // console.log({ token });
     useEffect(() => {
-        const token = JSON.parse(localStorage.getItem('data')).token;
-        getAllProfile(token,(error, data) => {
-            if (error) console.log('fetching error', error)
-            else setProfileData(data)
-        })
+        const userData = JSON.parse(localStorage.getItem('data'))
+        if (userData === null) {
+            props.history.replace('/')
+        } else {
+            getAllProfile((error, data) => {
+                if (error) console.log('fetching error', error)
+                else setProfileData(data)
+            })
+        }
     }, [])
-    if (profile.length === 0 || undefined) return null;
 
-    const data = profile.map(v => ({
+    const handleDeleteProfile = (row) => {
+        const token = JSON.parse(localStorage.getItem('data')).token
+        let info = {
+            id: row.id,
+            token: token
+        }
+        deleteAllProfile(info, (error, data) => {
+            if (error) console.log('fetching error', error)
+            else {
+                data.success === true && alert('delete successfully')
+                setProfileData(data.payload)
+            }
+        })
+    }
+     if (profile.length === 0 || undefined) return null;
+    const data1 = profile.map(v => ({
         id: v.id,
         address: v.address,
         name: v.name,
@@ -31,11 +48,15 @@ const AdminProfileTable = props => {
         phone: v.phone
     }))
 
+
+
+
+
     return (
         <div className="container-fluid">
             <KmTable
-                columns={columns(media)}
-                data={data}
+                columns={columns(media, handleDeleteProfile)}
+                data={data1}
                 keyField={"id"}
                 defaultSortField={"id"}
                 highlightOnHover={true}
@@ -43,7 +64,7 @@ const AdminProfileTable = props => {
                 customTheme={tableTheme(media)}
                 pagination={true}
                 paginationDefaultPage={1}
-                paginationTotalRows={data.length}
+                paginationTotalRows={data1.length}
                 paginationPerPage={5}
                 customPagination={true}
             />
@@ -53,7 +74,8 @@ const AdminProfileTable = props => {
 
 export default withMedia(AdminProfileTable)
 
-const columns = memoize((media, handleDeleteProduct, handleEditProduct) =>
+const columns = memoize((media, handleDeleteProfile, handleEditProfile) =>
+    // pattern="^[0]{1}[9]{1}[0-9]{9}$"
     [
         {
             name: 'Address',
@@ -76,7 +98,7 @@ const columns = memoize((media, handleDeleteProduct, handleEditProduct) =>
             sortable: true,
             right: true,
             cell: row =>
-                <img  src={IMG_SERVER + '/uploads/' + row.img} className="img-thumbnail " width={120} />
+                <img src={IMG_SERVER + '/uploads/' + row.img} className="img-thumbnail " width={120} />
         },
         {
             name: ' Mail',
@@ -124,7 +146,7 @@ const columns = memoize((media, handleDeleteProduct, handleEditProduct) =>
             cell: row => {
                 return (
                     <div
-                        onClick={() => console.log(row)}
+                        onClick={() => handleDeleteProfile(row)}
                         style={{ textAlign: 'right', cursor: 'pointer', color: '#a3a3a2', borderRadius: 6 }}
                         className="p-3 bg-danger text-light"
                     >
