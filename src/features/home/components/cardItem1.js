@@ -67,7 +67,7 @@ const BurgerType = ({ img, title, media }) => {
 
         <div className="hovereffect "
             style={{ cursor: 'pointer', objectFit: 'cover', height: media.desktop ? '89%' : '90%', }} >
-            <img className="img-fluid " src={img} alt="burger-category" />
+            <img className="img-fluid w-auto" src={img} alt="burger-category" style={{height:300,}} />
             <div className="overlay" >
                 <Link to={route.burger}
                     style={{ textDecoration: 'none', fontFamily: 'Volkhov', fontSize: media.desktop ? 20 : media.tablet ? 16 : 11 }}><span>{title}</span></Link>
