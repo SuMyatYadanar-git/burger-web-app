@@ -19,12 +19,11 @@ export const getAllCategory = (callback) => {
         .catch(error => callback(null, error))
 }
 
-export const editCategory = ({ categoryId, info }, callback) => {   
+export const editCategory = ({ categoryId, info }, callback) => {
     fetch(API_URL + `/category/${categoryId}`, {
         method: 'PUT',
         headers: {
-            // "Authorization": 'Bearer ' + token,
-            // "Content-Type": "application/json"
+            // "Authorization": 'Bearer ' + token,           
         },
         cache: 'no-cache',
         body: info
@@ -33,8 +32,7 @@ export const editCategory = ({ categoryId, info }, callback) => {
             if (res.status !== 200) throw res.json()
             else return res.json()
         })
-        .then(data => {
-            console.log(data)
+        .then(data => {           
             callback(null, data)
         })
         .catch(error => callback(null, error))

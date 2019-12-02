@@ -53,7 +53,13 @@ const AdminCategoryTable = props => {
 
         editCategory({ categoryId, info }, (error, data) => {
             if (error) console.log('fetching error', error)
-            else console.log(data)
+            else {
+                const modals = document.getElementById('updateModal')
+                const modalBackdrops = document.getElementsByClassName('modal-backdrop');
+                modals.classList.remove('show')
+                document.body.removeChild(modalBackdrops[1]);             
+                setCategory(data.payload)
+            }
         })
     }
 
@@ -112,7 +118,7 @@ const AdminCategoryTable = props => {
                         <div className="modal-body row px-3 m-0" style={{ height: 100 }}>
                             <input type="file" name="categoryImage" onChange={e => setCategoryImage(e.target.files[0])}
                                 style={{ height: 40, fontSize: '1.5rem' }} className="form-control col-6"
-                                required accept=".jpg,.JPEG,.png,.PNG,.gif,.GIF,.tiff,.TIFF"
+                                accept=".jpg,.JPEG,.png,.PNG,.gif,.GIF,.tiff,.TIFF"
                             />
                         </div>
                         <div className="modal-footer py-4">
