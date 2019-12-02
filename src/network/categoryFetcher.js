@@ -32,7 +32,7 @@ export const editCategory = ({ categoryId, info }, callback) => {
             if (res.status !== 200) throw res.json()
             else return res.json()
         })
-        .then(data => {           
+        .then(data => {
             callback(null, data)
         })
         .catch(error => callback(null, error))

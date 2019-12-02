@@ -33,17 +33,23 @@ const AdminCategoryTable = props => {
 
     if (category.length === 0) return null;
 
-    const handleDeleteCategory = (index) => console.log(index)
+    const handleDeleteCategory = (index) => {
+        const rowData = category[index]
+        const id = rowData.c_id
+        deleteAllCategory(id, (error, data) => {
+            if (error) console.log('fetching error', error)
+            else {
+                data.success && alert('delete done!')
+                setCategory(data.payload)
+            }
+        })
+    }
 
     const handleEditCategory = (index) => {
         const rowData = category[index]
-
         setCategoryName(rowData.c_name)
         setCategoryImage(rowData.c_img)
         setCategoryId(rowData.c_id)
-        // updateCategory((error,data)=>{
-
-        // })
     };
 
     const updateCategory = () => {
@@ -57,14 +63,14 @@ const AdminCategoryTable = props => {
                 const modals = document.getElementById('updateModal')
                 const modalBackdrops = document.getElementsByClassName('modal-backdrop');
                 modals.classList.remove('show')
-                document.body.removeChild(modalBackdrops[1]);             
+                document.body.removeChild(modalBackdrops[1]);
                 setCategory(data.payload)
             }
         })
     }
 
     const dataRow = category.reduce((r, c, i) => {
-        c.image = <img className="img-thumbnail" alt='Product' style={{ height: 75, width: 75 }} src={`${IMG_SERVER}/${c.c_img}`} />
+        c.image = <img className="img-thumbnail" alt='category' style={{ height: 75, width: 75 }} src={`${IMG_SERVER}/${c.c_img}`} />
         c.update = <button data-toggle="modal" data-target="#updateModal" className="btn btn-primary py-3 px-5" onClick={() => handleEditCategory(i)} style={{ fontSize: 15 }}><span><i className="fa fa-edit">Update</i></span></button>
         c.delete = <button className="btn btn-danger py-3 px-5" onClick={() => handleDeleteCategory(i)} style={{ fontSize: 15 }}><span><i className="fa fa-trash">Delete</i></span></button>
         return [...r, c]
@@ -110,7 +116,7 @@ const AdminCategoryTable = props => {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h4 className="modal-title">{"Add Category"}</h4>
-                            <button type="button" className="close" data-dismiss="modal" onClick={null}>×</button>
+                            <button type="button" className="close" data-dismiss="modal">×</button>
                         </div>
                         <div className="modal-body">
                             <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Category" onChange={(e) => setCategoryName(e.currentTarget.value)} value={categoryName} required />

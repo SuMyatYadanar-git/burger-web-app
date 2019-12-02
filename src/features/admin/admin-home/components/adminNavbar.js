@@ -33,7 +33,9 @@ const AdminNavbar = props => {
             const id = userData.payload[0].id
             GetloginData(id, (error, data) => {
                 if (error) console.error('fetch error', error)
-                else setloginNmae('admin')
+
+                else setloginNmae(data[0].user_name)
+                // setloginNmae('admin')
             })
         }
     }, [])
