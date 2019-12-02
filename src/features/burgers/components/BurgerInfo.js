@@ -26,7 +26,6 @@ const BurgerInfo = props => {
                 <div className=" col-lg-6 col-sm-12 p-0 px-1 pb-2">
                     <PromoBurger
                         img={bg1}
-
                         title={"happ hour promotion!"}
                         orgPrice={"25 "} disPrice={"20"}
                         media={media}

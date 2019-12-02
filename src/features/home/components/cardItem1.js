@@ -6,15 +6,16 @@ import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-import bg1 from '../../../Images/bg.jpg'
-import bg3 from '../../../Images/bg2.jpg'
+// import bg1 from '../../../Images/bg.jpg'
+// import bg3 from '../../../Images/bg2.jpg'
 import '../../../assets/css/burgerTypehover.css'
 import * as route from '../../../config/route.config'
 import './slider.css'
-
+import { IMG_SERVER } from '../../../network/api'
 
 const CardItem = props => {
-    const { media, category } = props  
+    const { media, category } = props
+    if (category.length === 0) return null;
 
     const settings = {
         dots: false,
@@ -30,7 +31,7 @@ const CardItem = props => {
         className: 'slides h-100',
         arrows: (media.desktop || media.tablet) ? true : false
     }
-    // console.log(category.payload)
+
     return (
         <div className="  container-fluid " style={{ position: 'relative', zIndex: 5, backgroundColor: 'white' }}>
             <div className="container">
@@ -40,37 +41,17 @@ const CardItem = props => {
                 </div>
 
                 <div id="box" style={{ overflow: 'hidden', scrollBehavior: 'smooth' }}>
-
                     <Slider {...settings}>
-
-                        <div className="px-1" >
-                            {
-                                category.map((v, k) =>                                    
-                                        <BurgerType img={v.c_img} title={v.c_name} media={media} />                                    
+                        {
+                            category.map((v,k) => {
+                                return (
+                                    <div className="px-1" key={k}>
+                                        <BurgerType img={IMG_SERVER + '/uploads/' + v.c_img} title={v.c_name} media={media} />
+                                    </div>
                                 )
-                            }
-                        </div>
-
-                        {/* <div className="px-1">
-                            <BurgerType img={bg1} title={"vegetables"} media={media} />
-                        </div>
-                        <div className="px-1">
-                            <BurgerType img={bg1} title={"barbeque"} media={media} />
-                        </div>
-                        <div className="px-1">
-                            <BurgerType img={bg3} title={"double chesse"} media={media} />
-                        </div>
-                        <div className="px-1">
-                            <BurgerType img={bg3} title={"standard"} media={media} />
-                        </div>
-                        <div className="px-1">
-                            <BurgerType img={bg3} title={"burger set"} media={media} />
-                        </div>
-                        <div className="px-1">
-                            <BurgerType img={bg3} title={"cheesy burger"} media={media} />
-                        </div> */}
+                            })
+                        }
                     </Slider>
-                    {/* </div> */}
                 </div>
             </div>
 

@@ -1,13 +1,12 @@
 const { API_URL } = require('./api')
 
 export const changePwd = (info, callback) => {
-   
     const pwd = info.Npwd
     const id = info.id
     fetch(API_URL + '/user/change-pwd', {
         method: 'PATCH',
         headers: {
-            "Authorization": 'Bearer ' + info.token,
+            // "Authorization": 'Bearer ' + info.token,
             "Content-Type": "application/json"
         },
         cache: 'no-cache',
@@ -18,7 +17,28 @@ export const changePwd = (info, callback) => {
             else return res.json()
         })
         .then(data => {
-             console.log(data)
+              console.log(data)
+            callback(null, data)
+        })
+        .then(error => callback(null, error))
+}
+
+export const changeUserName=(info,callback)=>{
+    fetch(API_URL + '/user/change-name', {
+        method: 'PATCH',
+        headers: {
+            // "Authorization": 'Bearer ' + info.token,
+            "Content-Type": "application/json"
+        },
+        cache: 'no-cache',
+        body: JSON.stringify({ info})
+    })
+        .then(res => {
+            if (res.status !== 200) throw res.json()
+            else return res.json()
+        })
+        .then(data => {
+            console.log(data)
             callback(null, data)
         })
         .then(error => callback(null, error))
@@ -41,5 +61,4 @@ export const GetloginData = (id, callback) => {
             callback(null, data.payload)
         })
         .catch(error => callback(null, error))
-
 }

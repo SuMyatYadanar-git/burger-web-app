@@ -1,15 +1,22 @@
 import React, { useState, } from 'react'
 
-import { changePwd } from '../../../network/userFetcher'
+import { changePwd, changeUserName } from '../../../network/userFetcher'
 
 
 const AdminUserSetting = props => {
     const [Npwd, setNpwd] = useState('')
     const [Cpwd, setCpwd] = useState('')
-    const [name, setName] = useState('')
+    const [name, setName] = useState(JSON.parse(localStorage.getItem('data')) === null
+        ? '' :
+        JSON.parse(localStorage.getItem('data')).payload[0].user_name)
 
-    const token = JSON.parse(localStorage.getItem('data')).token
-    const id = JSON.parse(localStorage.getItem('data')).payload[0].id
+    const userData = JSON.parse(localStorage.getItem('data'))
+    if (userData === null) {
+        props.history.replace('/')
+        return null;
+    }
+    const id = userData.payload[0].id
+    const token = useState.token
 
     const _onChangePwd = () => {
         Npwd.length < 3 && alert('password must be above 4character at least!')
@@ -18,6 +25,7 @@ const AdminUserSetting = props => {
             changePwd(info, (error, data) => {
                 if (error) console.log('fetching error', error)
                 else {
+                    console.log(data)
                     data.success === true && alert(data.message)
                 }
             })
@@ -25,6 +33,20 @@ const AdminUserSetting = props => {
             alert('new passwrod and confirm password must be the same!')
             console.log('db error')
         }
+    }
+
+    const _onChangeName = (e) => {
+        e.preventDefault()
+        let info = { name, id, token }
+        changeUserName(info, (error, data) => {
+            if (error) console.log('fetching error', error)
+            else {
+                const updateName = data.payload[0].user_name
+                setName(updateName)
+                alert('successfully updated')
+                // data.success === true && alert(data.message)
+            }
+        })
     }
 
     return (
@@ -64,6 +86,7 @@ const AdminUserSetting = props => {
                     <input className="btn btn-warning form-control bg-warning  col-lg-5"
                         style={{ height: '3rem', fontSize: '1.5rem' }}
                         type="submit"
+                        onClick={() => console.log('hellooooo')}
                     />
 
                 </div>
@@ -82,11 +105,20 @@ const AdminUserSetting = props => {
                 </div>
                 <div className="form-group d-flex justify-content-center">
                     <label className="col-lg-2" ></label>
-                    <input
+                    <button
                         className="btn btn-warning form-control bg-warning  col-lg-5"
                         style={{ height: '3rem', fontSize: '1.5rem' }}
                         type="submit"
-                    />
+                        onClick={(e) => _onChangeName(e)}
+                    >
+                        Submit
+                    </button>
+                    {/* <input
+                        className="btn btn-warning form-control bg-warning  col-lg-5"
+                        style={{ height: '3rem', fontSize: '1.5rem' }}
+                        type="submit"
+                        onClick={(e)=>_onChangeName(e)}
+                    /> */}
                 </div>
             </form>
         </div>

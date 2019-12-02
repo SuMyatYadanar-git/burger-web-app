@@ -2,11 +2,6 @@ import React from 'react'
 import { withMedia } from 'react-media-query-hoc'
 import {Link} from 'react-router-dom'
 
-
-// import Photo from '../../../Images/bg1.jpg'
-// import photo1 from '../../../Images/bg5.jpg'
-// import photo2 from '../../../Images/eggbg.jpeg'
-
 import photo from '../../../Images/bg1.jpg'
 import photo1 from '../../../Images/bg5.jpg'
 import photo2 from '../../../Images/eggbg.jpeg'

@@ -21,7 +21,7 @@ const LoginContainer = props => {
                 // window.location.href = `/${route.adminHome}`              
             }
             else {
-                alert('incorrect username and password!')
+                alert(data.message)
                 setName('')
                 setPwd('')
             }

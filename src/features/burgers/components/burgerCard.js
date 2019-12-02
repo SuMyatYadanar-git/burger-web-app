@@ -3,31 +3,34 @@ import { withMedia } from 'react-media-query-hoc'
 
 import * as Colors from '../../../config/color.config'
 import './burger.css'
+import { IMG_SERVER } from '../../../network/api'
 
 const BurgerCard = props => {
-    const { media } = props
-    const arrayReverse = ProductDetail.sort((a, b) => parseFloat(b.id) - parseFloat(a.id))
+    const { media, product } = props
+    if (product.lenght === 0) return null;
+    // const arrayReverse = ProductDetail.sort((a, b) => parseFloat(b.id) - parseFloat(a.id))
+    const arrayReverse = product.sort((a, b) => parseFloat(b.id) - parseFloat(a.id))
     return (
 
-        <div className='container'>
+        <div className='container '>
             <div className='text-center'>
                 <div className='px-5 py-4' style={{ color: `${Colors.textBrown}`, fontFamily: 'Volkhov', }}>
-                    <span className="font-weight-bold" style={{fontSize: media.desktop ? 35 : media.tablet ? 25 : 20}}>The Best From Our Offer</span>
-                    <p style={{ fontWeight: 'lighter' ,fontSize: media.desktop ?25 : media.tablet ? 17 :15}}>
+                    <span className="font-weight-bold" style={{ fontSize: media.desktop ? 35 : media.tablet ? 25 : 20 }}>The Best From Our Offer</span>
+                    <p style={{ fontWeight: 'lighter', fontSize: media.desktop ? 25 : media.tablet ? 17 : 15 }}>
                         Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
              nibh euismod tincidunt ut laoreet dolore magna aliquam
                    </p>
                 </div>
 
-                <div className='d-flex flex-row flex-wrap justify-content-center'>
-
-                    {arrayReverse.map((v, k) =>
-                        <div className='col-lg-4 p-3' key={k}>
-                            <div className='p-3 py-4' style={{ background: Colors.white, borderRadius: 5, fontFamily: 'Volkhov' }}>
-                                <img className='img-fluid img-con' src={process.env.PUBLIC_URL + `${v.imgURL}`} alt='BurgerImage' />
-                                <div className="pt-4">  <h1 style={{ color: `${Colors.Price}`, }}>${v.price}</h1> </div>
-                                <h3 style={{ color: `${Colors.textBrown}`, fontWeight:'bold'}}>{v.name}</h3>
-                                <span style={{fontSize:media.desktop ? 18 : media.tablet ? 14 : 13}}>{v.about}</span>
+                <div className='d-flex flex-row flex-wrap justify-content-center '>
+                    {/* process.env.PUBLIC_URL + */}
+                    {arrayReverse.map((v,k) =>
+                        <div className='col-lg-4 pb-2' key={k}>
+                            <div className='p-3 py-4 h-100' style={{ background: Colors.white, borderRadius: 5, fontFamily: 'Volkhov' }}>
+                                <img className='img-fluid img-con' src={IMG_SERVER + '/uploads/' + `${v.p_img}`} alt='BurgerImage' />
+                                <div className="pt-4">  <h1 style={{ color: `${Colors.Price}`, }}>{v.p_price}</h1> </div>
+                                <h3 style={{ color: `${Colors.textBrown}`, fontWeight: 'bold' }}>{v.p_name}</h3>
+                                <span style={{ fontSize: media.desktop ? 18 : media.tablet ? 14 : 13 }}>{v.description}</span>
                             </div>
                         </div>)}
                 </div>

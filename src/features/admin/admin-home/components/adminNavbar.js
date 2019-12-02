@@ -11,8 +11,8 @@ const AdminNavbar = props => {
     const [loginName, setloginNmae] = useState('admin')
     const [modalOpen, setModalOpen] = useState(false)
 
-    const token = JSON.parse(localStorage.getItem('data')).token
-    const id = JSON.parse(localStorage.getItem('data')).payload[0].id
+    //  const data = JSON.parse(localStorage.getItem('data'))
+    // const id = JSON.parse(localStorage.getItem('data')).payload[0].id
 
     const openModal = () => setModalOpen(true)
     const closeModal = () => {
@@ -26,12 +26,16 @@ const AdminNavbar = props => {
     }
 
     useEffect(() => {
-        GetloginData(id, (error, data) => {
-            if (error) console.error('fetch error', error)
-            else setloginNmae('admin')
-            // setloginNmae(data[0].user_name)
-            // console.log(data)
-        })
+        const userData = JSON.parse(localStorage.getItem('data'))
+        if (userData === null) {
+            props.history.replace('/')
+        } else {
+            const id = userData.payload[0].id
+            GetloginData(id, (error, data) => {
+                if (error) console.error('fetch error', error)
+                else setloginNmae('admin')
+            })
+        }
     }, [])
 
     return (
