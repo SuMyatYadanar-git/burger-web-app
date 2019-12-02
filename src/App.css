@@ -1,11 +1,32 @@
-.full-bg-size { 
-  background: url(./Images/burgerBackground/bg1.jpg) no-repeat center center fixed; 
+.full-bg-size {
+  background: url(./Images/burgerBackground/bg1.jpg) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
   min-height: 100vh;
-  text-shadow: 1px  grey;
+  text-shadow: 1px grey;
   text-align: center;
-  
+}
+
+input[type=search] {
+  min-width: 300px;
+  height: 30px;
+  font-size: 14px;
+}
+
+.custom-select {
+  min-width: 100px;
+  height: 30px;
+  font-size: 14px;
+}
+
+.table>tbody>tr>td, .table>thead>tr>th {
+  vertical-align: middle;
+  text-align: center;
+  border: none;
+}
+
+.modal-backdrop.fade {
+  z-index: 0!important;
 }
