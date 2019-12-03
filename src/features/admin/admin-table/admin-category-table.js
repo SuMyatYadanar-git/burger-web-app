@@ -33,11 +33,10 @@ const AdminCategoryTable = props => {
 
     if (category.length === 0) return null;
 
-    const handleDeleteCategory = (index) => console.log(index)
+    const handleDeleteCategory = (index) => console.log( category[index])
 
     const handleEditCategory = (index) => {
         const rowData = category[index]
-
         setCategoryName(rowData.c_name)
         setCategoryImage(rowData.c_img)
         setCategoryId(rowData.c_id)
