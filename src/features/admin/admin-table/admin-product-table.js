@@ -259,6 +259,7 @@ const AdminProductTable = props => {
                             <input type="file" name="productImage" onChange={e => setproductImage(e.target.files[0])}
                                 style={{ height: 40, fontSize: '1.5rem' }} className="form-control col-6"
                                 accept=".jpg,.JPEG,.png,.PNG,.gif,.GIF,.tiff,.TIFF"
+                                required
                             />
                         </div>
 
