@@ -24,7 +24,7 @@ const AdminCategoryTable = props => {
         if (userData === null) {
             props.history.replace('/')
         } else {
-            getAllCategory(token,(error, data) => {
+            getAllCategory((error, data) => {
                 if (error) console.error(error)
                 else setCategory(data)
             })
