@@ -17,12 +17,51 @@ export const getAllProduct = (callback) => {
         })
         .catch(error => callback(null, error))
 }
+export const addNewProduct =({info,token},callback)=>{
+    fetch(API_URL + `/product`,{
+      method:'POST',
+      headers:{
+            "Authorization": 'Bearer ' + token, 
+      },
+      cache:'no-cache',
+      body:info
+    })
+    .then(res=>{
+        if(res.status !== 200) throw res.json()
+        else return res.json()
+    })
+    .then(data => {
+        callback(null, data)
+    })
+    .catch(error => callback(null, error))
+}
 
-export const deleteAllProduct = (info, callback) => {
-    fetch(API_URL + `/product/${info.id}`, {
+export const editProduct = ({ id, info,token }, callback) => {
+    console.log(id, info)
+    fetch(API_URL + `/product/${id}`, {
+        method: 'PUT',
+        headers: {
+               "Authorization": 'Bearer ' + token,
+            // "Content-Type": "application/json"
+        },
+        cache: 'no-cache',
+        body: info
+    })
+        .then(res => {
+            if (res.status !== 200) throw res.json()
+            else return res.json()
+        })
+        .then(data => {
+            callback(null, data)
+        })
+        .catch(error => callback(null, error))
+}
+
+export const deleteAllProduct = (id,token, callback) => {
+    fetch(API_URL + `/product/${id}`, {
         method: 'DELETE',
         headers: {
-            //   "Authorization": 'Bearer ' + info.token,
+               "Authorization": 'Bearer ' + token,
             "Content-Type": "application/json"
         },
         cache: 'no-cache'

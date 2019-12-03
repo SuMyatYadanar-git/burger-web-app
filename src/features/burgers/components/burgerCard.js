@@ -24,10 +24,10 @@ const BurgerCard = props => {
 
                 <div className='d-flex flex-row flex-wrap justify-content-center '>
                     {/* process.env.PUBLIC_URL + */}
-                    {arrayReverse.map((v,k) =>
+                    {arrayReverse.map((v, k) =>
                         <div className='col-lg-4 pb-2' key={k}>
                             <div className='p-3 py-4 h-100' style={{ background: Colors.white, borderRadius: 5, fontFamily: 'Volkhov' }}>
-                                <img className='img-fluid img-con' src={IMG_SERVER + '/uploads/' + `${v.p_img}`} alt='BurgerImage' />
+                                <img className='img-fluid img-con' src={`${IMG_SERVER}/${v.p_img}`} alt='BurgerImage' />
                                 <div className="pt-4">  <h1 style={{ color: `${Colors.Price}`, }}>{v.p_price}</h1> </div>
                                 <h3 style={{ color: `${Colors.textBrown}`, fontWeight: 'bold' }}>{v.p_name}</h3>
                                 <span style={{ fontSize: media.desktop ? 18 : media.tablet ? 14 : 13 }}>{v.description}</span>

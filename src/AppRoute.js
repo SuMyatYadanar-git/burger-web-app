@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { withRouter, Route, Switch, Redirect } from 'react-router-dom'
 
 import HomeContainer from './features/home/container/HomeContainer'
@@ -23,8 +23,9 @@ import AdminUserSetting from './features/admin/admin-table/admin-user-setting'
 
 const AppRoute = props => {
     const { history } = props
+    // const [name, setName] = useState(JSON.parse(localStorage.getItem('data')) === null ? '' : JSON.parse(localStorage.getItem('data')).payload[0].user_name)
     const routeName = ['/admin', '/admin-category', '/admin-product', '/admin-profile', '/user']
-    const routeAdminName = ['/', '/burger', '/about', '/map', '/burgerInfo', '/contant', '/admin']
+    const routeAdminName = ['/', '/burger', '/about', '/map', '/burgerInfo', '/contant', '/admin']   
 
     return (
         <div>

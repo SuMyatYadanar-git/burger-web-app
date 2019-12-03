@@ -6,19 +6,15 @@ import { changePwd, changeUserName } from '../../../network/userFetcher'
 const AdminUserSetting = props => {
     const [Npwd, setNpwd] = useState('')
     const [Cpwd, setCpwd] = useState('')
-    const [name, setName] = useState(
-        JSON.parse(localStorage.getItem('data')) === undefined ? '' :
-            JSON.parse(localStorage.getItem('data')).payload[0].user_name
-    )
-
+    const [name, setName] = useState('')
 
     const userData = JSON.parse(localStorage.getItem('data'))
-    // console.log(JSON.parse(localStorage.getItem('data')).payload[0].user_name)
 
     if (userData === null) {
         props.history.replace('/')
         return null;
     }
+
     const id = userData.payload[0].id
     const token = userData.token
 
@@ -26,7 +22,7 @@ const AdminUserSetting = props => {
         e.preventDefault()
         Npwd.length < 3 && alert('password must be above 4character at least!')
         if (Npwd === Cpwd) {
-            const info = { Npwd, id, token }
+            let info = { Npwd, id, token }
             changePwd(info, (error, data) => {
                 if (error) console.log('fetching error', error)
                 else {
@@ -36,6 +32,7 @@ const AdminUserSetting = props => {
                         setNpwd('')
                         setCpwd('')
                     }
+
                 }
             })
         } else {
@@ -46,20 +43,20 @@ const AdminUserSetting = props => {
 
     const onChangeName = (e) => {
         e.preventDefault();
-        const info = { name, id, token }
+        let info = { name, id, token }
         changeUserName({ info }, (error, data) => {
+
             if (error) console.log('fetching error', error)
             else {
                 alert('successfully updated')
-                const userInfo = { ...JSON.parse(localStorage.getItem('data')), payload: data.payload }
-                localStorage.setItem('data', JSON.stringify(userInfo))
+                 console.log({ data })
                 const updateName = data.payload === undefined ? 'admin' : data.payload[0].user_name
                 setName(updateName)
-                window.location.reload()
+                console.log(name)
             }
         })
     }
-
+    console.log(name)
     return (
         <div className="container">
             <form className="m-0 px-0 py-5 border" onSubmit={(e) => _onChangePwd(e)} style={{ fontSize: '1.8rem' }} >

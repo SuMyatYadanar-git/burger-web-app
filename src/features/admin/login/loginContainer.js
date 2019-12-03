@@ -17,8 +17,7 @@ const LoginContainer = props => {
             if (error) console.log(error)
             else if (data.success === true) {
                 localStorage.setItem('data', JSON.stringify(data))
-                props.history.replace(`/${route.adminProfile}`)
-                // window.location.href = `/${route.adminHome}`              
+                props.history.replace(`/${route.adminProfile}`)             
             }
             else {
                 alert(data.message)
@@ -27,7 +26,6 @@ const LoginContainer = props => {
             }
         })
     }
-
     // if (localStorage.getItem('data') !== null) 
 
     return (

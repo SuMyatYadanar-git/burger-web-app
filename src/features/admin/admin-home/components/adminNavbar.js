@@ -7,37 +7,35 @@ import KmModal from '../../../../common/KmModal'
 import * as route from '../../../../config/route.config'
 
 const AdminNavbar = props => {
-    const { history } = props
-    const [loginName, setloginNmae] = useState('admin')
+    const { history } = props   
     const [modalOpen, setModalOpen] = useState(false)
 
-    //  const data = JSON.parse(localStorage.getItem('data'))
+    // const data = JSON.parse(localStorage.getItem('data'))
     // const id = JSON.parse(localStorage.getItem('data')).payload[0].id
-
-    const openModal = () => setModalOpen(true)
-    const closeModal = () => {
-        setModalOpen(false);
-        // setSelectedRow(initialSelectedRow);
-    }
 
     const _onClickLogout = () => {
         localStorage.removeItem('data');
         props.history.replace(`/${route.admin}`)
     }
 
-    useEffect(() => {
-        const userData = JSON.parse(localStorage.getItem('data'))
-        if (userData === null) {
-            props.history.replace('/')
-        } else {
-            const id = userData.payload[0].id
-            GetloginData(id, (error, data) => {
-                if (error) console.error('fetch error', error)
-                else setloginNmae('admin')
-            })
-        }
-    }, [])
+    // useEffect(() => {
+    //     const userData = JSON.parse(localStorage.getItem('data'))
+    //     if (userData === null) {
+    //         props.history.replace('/')
+    //     } else {
+    //         const id = userData.payload[0].id
+    //         GetloginData(id, (error, data) => {
+    //             if (error) console.error('fetch error', error)
+    //             else {
+    //                 const filterName = data === undefined ? 'admin' : data[0].user_name
+    //                 setloginName(filterName)
+    //             }
+    //             // setloginNmae('admin')
+    //         })
+    //     }
+    // }, [])
 
+    const loginName = JSON.parse(localStorage.getItem('data')) === null ? 'admin' : JSON.parse(localStorage.getItem('data')).payload[0].user_name
     return (
         <div className="container-fluid p-0">
             <div className="d-flex flex-row justify-content-between p-4 bg-warning">
@@ -70,25 +68,6 @@ const AdminNavbar = props => {
                 <ol className="breadcrumb " style={{ backgroundColor: 'transparent', fontSize: '1.5rem', }}>
                     <li className="breadcrumb-item text-dark" aria-current="page">{history.location.pathname.slice(1)}</li>
                 </ol>
-                <div className="p-2 mx-5 ">
-                    <button type="button"
-                        className="btn btn-outline-success "
-                        style={{ width: 100, height: 30, fontSize: '1.5rem', }}
-                        onClick={() => openModal()}
-                    >
-                        <i className="fas fa-plus" /> <span className="px-2">Add New </span>
-                    </button>
-                    <KmModal
-                        isOpen={modalOpen}
-                        // onAfterOpen={this.afterOpenModal}
-                        onRequestClose={closeModal}
-                        // style={customStyles}
-                        contentLabel="Example Modal"
-                    >
-                        <h3>{`Regirster On`}</h3>
-                        <button onClick={closeModal}>close</button>
-                    </KmModal>
-                </div>
             </nav>
 
         </div>
