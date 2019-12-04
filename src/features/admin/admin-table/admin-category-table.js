@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { withMedia } from 'react-media-query-hoc'
-import { memoize } from 'react-data-table-component'
-
-import tableTheme from "../../../common/TableThems"
-import KmTable from '../../../common/KmTable'
-import KmModal from '../../../common/KmModal'
-import { MDBBtn, MDBInput, MDBDataTable, MDBContainer } from "mdbreact";
+import Swal from 'sweetalert2'
 import { getAllCategory, deleteAllCategory, editCategory, addNewCategory } from '../../../network/categoryFetcher'
 import { IMG_SERVER } from '../../../network/api'
 import KmDataTable from '../../../common/KmDataTable'
@@ -39,7 +34,13 @@ const AdminCategoryTable = props => {
         deleteAllCategory(id, token, (error, data) => {
             if (error) console.log('fetching error', error)
             else {
-                data.success && alert('delete done!')
+                data.success &&
+                    Swal.fire({
+                        title: 'Delete category',
+                        text: ' delete successfully!',
+                        // text: data.message,
+                        icon: 'success',
+                    })
                 setCategory(data.payload)
             }
         })
@@ -55,24 +56,34 @@ const AdminCategoryTable = props => {
         let info = new FormData();
         info.append('name', categoryName);
         info.append('categoryImage', categoryImage);
-        editCategory({ categoryId, info,token }, (error, data) => {
+        editCategory({ categoryId, info, token }, (error, data) => {
             if (error) console.log('fetching error', error)
             else {
                 const modals = document.getElementById('updateModal')
                 const modalBackdrops = document.getElementsByClassName('modal-backdrop');
                 modals.classList.remove('show')
                 document.body.removeChild(modalBackdrops[1]);
+                Swal.fire({
+                    title: 'Edit Category',
+                    text: ' successfully change your category!',
+                    icon: 'success'
+                    // text: data.message,
+                })
                 setCategory(data.payload)
             }
         })
     }
-
+    const handleNewCategory = () => {
+        setCategoryName('')
+        setCategoryImage(null)
+        setCategoryId('')
+    }
     const AddNewCategory = (e) => {
         e.preventDefault()
         let info = new FormData();
         info.append('name', categoryName);
         info.append('categoryImage', categoryImage);
-        addNewCategory({ info,token }, (error, data) => {
+        addNewCategory({ info, token }, (error, data) => {
             if (error) console.log('fetching error', error)
             else {
                 const modals = document.getElementById('NewModal')
@@ -81,6 +92,12 @@ const AdminCategoryTable = props => {
                 document.body.removeChild(modalBackdrops[1]);
                 setCategory(data.payload)
                 if (data.success) {
+                    Swal.fire({
+                        title: 'Add New Category',
+                        text: ' successfully Added!',
+                        // text: data.message,
+                        icon: 'success',
+                    })
                     setCategoryName('')
                     setCategoryImage(null)
                     setCategoryId('')
@@ -129,12 +146,15 @@ const AdminCategoryTable = props => {
 
     return (
         <div className="container" style={{ fontSize: 16 }}>
+            <div className="p-4 text-center text-dark font-weight-bold" style={{ fontSize: '2rem' }}>
+                Category Page
+            </div>
             <div className="d-flex justify-content-end">
                 <button type="button"
                     data-toggle="modal" data-target="#NewModal"
                     className="btn btn-outline-success "
                     style={{ width: 100, height: 30, fontSize: '1.5rem', }}
-                    onClick={() => null}
+                    onClick={handleNewCategory}
                 >
                     <i className="fas fa-plus" /> <span className="px-2">Add New </span>
                 </button>
@@ -151,7 +171,7 @@ const AdminCategoryTable = props => {
                             <button type="button" className="close" data-dismiss="modal">×</button>
                         </div>
                         <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Category" onChange={(e) => setCategoryName(e.currentTarget.value)} value={categoryName} required />
+                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Category" onChange={(e) => setCategoryName(e.currentTarget.value)} value={categoryName} />
                         </div>
                         <div className="modal-body row px-3 m-0" style={{ height: 100 }}>
                             <input type="file" name="categoryImage" onChange={e => setCategoryImage(e.target.files[0])}

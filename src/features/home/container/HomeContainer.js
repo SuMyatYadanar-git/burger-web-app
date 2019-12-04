@@ -6,7 +6,6 @@ import SingleItem from '../components/singleItem'
 
 import { getAllCategory } from '../../../network/categoryFetcher'
 
-
 // import BurgerInfo from '../components/BurgerInfo'
 
 const HomeContainer = props => {

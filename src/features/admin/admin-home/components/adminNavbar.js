@@ -7,17 +7,18 @@ import KmModal from '../../../../common/KmModal'
 import * as route from '../../../../config/route.config'
 
 const AdminNavbar = props => {
-    const { history } = props   
-    const [modalOpen, setModalOpen] = useState(false)
-
-    // const data = JSON.parse(localStorage.getItem('data'))
-    // const id = JSON.parse(localStorage.getItem('data')).payload[0].id
+    const { history } = props
 
     const _onClickLogout = () => {
         localStorage.removeItem('data');
         props.history.replace(`/${route.admin}`)
     }
+    const loginName = JSON.parse(localStorage.getItem('data')) === null ?
+        'admin' :
+        JSON.parse(localStorage.getItem('data')).payload[0].user_name
 
+    // const data = JSON.parse(localStorage.getItem('data'))
+    // const id = JSON.parse(localStorage.getItem('data')).payload[0].id
     // useEffect(() => {
     //     const userData = JSON.parse(localStorage.getItem('data'))
     //     if (userData === null) {
@@ -35,7 +36,6 @@ const AdminNavbar = props => {
     //     }
     // }, [])
 
-    const loginName = JSON.parse(localStorage.getItem('data')) === null ? 'admin' : JSON.parse(localStorage.getItem('data')).payload[0].user_name
     return (
         <div className="container-fluid p-0">
             <div className="d-flex flex-row justify-content-between p-4 bg-warning">
@@ -64,11 +64,11 @@ const AdminNavbar = props => {
 
                 <div><img src={KmLogo} className="img-fluid" width={50} /></div>
             </div>
-            <nav aria-label="breadcrumb" className="d-flex justify-content-between align-items-center ">
+            {/* <nav aria-label="breadcrumb" className="d-flex justify-content-between align-items-center ">
                 <ol className="breadcrumb " style={{ backgroundColor: 'transparent', fontSize: '1.5rem', }}>
                     <li className="breadcrumb-item text-dark" aria-current="page">{history.location.pathname.slice(1)}</li>
                 </ol>
-            </nav>
+            </nav> */}
 
         </div>
     )

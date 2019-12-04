@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Swal from 'sweetalert2'
 
 import { changePwd, changeUserName } from '../../../network/userFetcher'
 
@@ -32,7 +33,12 @@ const AdminUserSetting = props => {
                 else {
                     // console.log(data)
                     if (data.success === true) {
-                        alert(data.message)
+                        Swal.fire({
+                            title: 'Change Password',
+                            text: ' update password successfully!',
+                            // text: data.message,
+                            icon: 'success',
+                        })
                         setNpwd('')
                         setCpwd('')
                     }
@@ -50,7 +56,11 @@ const AdminUserSetting = props => {
         changeUserName({ info }, (error, data) => {
             if (error) console.log('fetching error', error)
             else {
-                alert('successfully updated')
+                // Swal.fire({
+                //     title: 'Change User Name',
+                //     text: ' update name successfully!',
+                //     icon: 'success',
+                // })
                 const userInfo = { ...JSON.parse(localStorage.getItem('data')), payload: data.payload }
                 localStorage.setItem('data', JSON.stringify(userInfo))
                 const updateName = data.payload === undefined ? 'admin' : data.payload[0].user_name
@@ -62,6 +72,9 @@ const AdminUserSetting = props => {
 
     return (
         <div className="container">
+            <div className="p-4 text-center text-dark font-weight-bold" style={{ fontSize: '2rem' }}>
+                User Setting
+            </div>
             <form className="m-0 px-0 py-5 border" onSubmit={(e) => _onChangePwd(e)} style={{ fontSize: '1.8rem' }} >
                 <div className="form-group d-flex justify-content-center" >
                     <label className="col-lg-2" >New Password</label>
@@ -103,7 +116,8 @@ const AdminUserSetting = props => {
                         style={{ height: '3rem', fontSize: '1.8rem' }}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        required />
+                        required
+                    />
                 </div>
                 <div className="form-group d-flex justify-content-center">
                     <label className="col-lg-2" ></label>

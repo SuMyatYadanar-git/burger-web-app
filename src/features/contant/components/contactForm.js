@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { withMedia } from 'react-media-query-hoc'
+import Swal from 'sweetalert2'
 
 import * as Colors from '../../../config/color.config'
-// import { mailSender } from '../../../network/MailSender'
+import { mailSender } from '../../../network/MailSender'
 
 const CommentForm = (props) => {
     const { media } = props
@@ -13,10 +14,30 @@ const CommentForm = (props) => {
     const _onSendMail = (e) => {
         e.preventDefault()
         let info = { name, mail, message }
-        // mailSender(info, (error, data) => {
-        //     if (error != null) console.error("fetching error", error)
-        //     else console.log(data)
-        // })
+        mailSender({ info }, (error, data) => {
+            if (error != null) {
+                console.error("fetching error", error)
+                Swal.fire({
+                    title: "Your operation failed",
+                    text: 'please try again!',
+                    icon: 'info',
+                })
+            }
+            else {
+                if (data.success) {
+                    console.log(data.data.accpted)
+                    Swal.fire({
+                        title: 'Your Email Sent Successfully',
+                        text: ' thanks for messaging to us!',
+                        // text: data.message,
+                        icon: 'success',
+                    })
+                    setName('')
+                    setMail('')
+                    setMessage('')
+                }
+            }
+        })
     }
 
 
@@ -28,7 +49,7 @@ const CommentForm = (props) => {
                 <form onSubmit={(e) => _onSendMail(e)}>
                     <input
                         type="text"
-                        pattern="^[0]{1}[9]{1}[0-9]{9}$"
+                        // pattern="^[0]{1}[9]{1}[0-9]{9}$"
                         className='form-control mb-4 '
                         style={{ fontSize: 14, border: `1px solid ${Colors.Price}`, height: '40px' }}
                         placeholder={'Name'}

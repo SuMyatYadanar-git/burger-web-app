@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
+import Swal from 'sweetalert2'
 import '../../../App.css'
 import { withRouter } from 'react-router-dom'
 import MyButton from '../../../common/myButton'
 import * as route from '../../../config/route.config'
 import { loginFetcher } from '../../../network/loginFetcher'
+
 
 const LoginContainer = props => {
     const [name, setName] = useState('')
@@ -17,24 +19,24 @@ const LoginContainer = props => {
             if (error) console.log(error)
             else if (data.success === true) {
                 localStorage.setItem('data', JSON.stringify(data))
-                props.history.replace(`/${route.adminProfile}`)             
+                props.history.replace(`/${route.adminProfile}`)
             }
             else {
-                alert(data.message)
+                Swal.fire({
+                    title: 'username and password incorret',
+                    text:'please login again',
+                    // text: data.message,
+                    icon: 'error',
+                })
                 setName('')
                 setPwd('')
             }
         })
     }
-    // if (localStorage.getItem('data') !== null) 
 
     return (
         <div className="container-fluid p-0">
             <div className="bg-dim full-bg-size ">
-
-                {/* <div className="text-center font-weight-bold text-capitalize text-light  pb-5">
-                        <h3>please  login  to  your  account</h3>
-                    </div> */}
                 {/* ====================================================================================== */}
                 <div className="text-light " style={{ position: 'absolute', top: '20%', width: '98%', paddingLeft: '2%' }}>
                     <div className="d-flex flex-row justify-content-center ">
@@ -84,7 +86,7 @@ const LoginContainer = props => {
                                         text="login"
                                         type="submit"
                                         className="btn-outline-warning btn-block"
-                                    // style={{ width: 200 }}
+                                        style={{ color: 'black' }}
 
                                     />
                                 </div>

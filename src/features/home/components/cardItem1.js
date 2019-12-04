@@ -26,7 +26,7 @@ const CardItem = props => {
         rows: 1,
         autoplay: true,
         slidesToShow: 1,
-        slidesPerRow: (media.desktop || media.tablet) ? 3 : 2,
+        slidesPerRow: (media.desktop || media.tablet) ? 3 : 1,
         //  centerMode: true,
         className: 'slides h-100',
         arrows: (media.desktop || media.tablet) ? true : false

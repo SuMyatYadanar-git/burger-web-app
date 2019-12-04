@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { withMedia } from 'react-media-query-hoc'
 
 import LocationCard from '../components/locationCards'
-import ContactPage from '../components/contactForm'
+import ContactForm from '../components/contactForm'
 import BurgerImage from '../../../Images/burgerBackground/bg2.jpg'
 import ContactMap from '../../map/contactMap'
 import { getAllProfile } from '../../../network/profileFetcher'
@@ -60,7 +60,7 @@ const ContactContainer = props => {
                 <LocationCard profile={profile} />
             </div>
             <div>
-                <ContactPage />
+                <ContactForm />
             </div>
         </div>
 

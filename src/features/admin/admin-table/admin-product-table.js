@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { withMedia } from 'react-media-query-hoc'
-import { memoize } from 'react-data-table-component'
+import Swal from 'sweetalert2'
+
 import KmDataTable from '../../../common/KmDataTable'
-
-import tableTheme from "../../../common/TableThems"
-import KmTable from '../../../common/KmTable'
-import Mybtn from '../../../common/myButton'
-
 import { IMG_SERVER } from '../../../network/api'
 import { getAllProduct, deleteAllProduct, editProduct, addNewProduct } from '../../../network/productFetcher'
 
@@ -36,29 +32,6 @@ const AdminProductTable = props => {
 
     if (products.length === 0) return null;
 
-    // const data = products.map(v => ({
-    //     id: v.p_id,
-    //     image: v.p_img,
-    //     name: v.p_name,
-    //     price: v.p_price,
-    //     description: v.description
-    // })
-    // )
-    // const handleDeleteProduct = (row) => {
-    //     const id = row.id
-    //     const token = JSON.parse(localStorage.getItem('data')).token
-    //     let info = {
-    //         id: id,
-    //         token: token
-    //     }
-    //     deleteAllProduct(info, (error, data) => {
-    //         if (error) console.log('fetching error', error)
-    //         else {
-    //             data.success === true && alert('delete successfully')
-    //             setProduct(data.payload)
-    //         }
-    //     })
-    // }
     const handleEditProduct = (index) => {
         const rowData = products[index]
         setId(rowData.p_id)
@@ -74,17 +47,30 @@ const AdminProductTable = props => {
         info.append('price', productPrice);
         info.append('description', description);
         info.append('productImage', productImage)
-        editProduct({ id, info,token }, (error, data) => {
+        editProduct({ id, info, token }, (error, data) => {
             if (error) console.log('fetching error', error)
             else {
                 const modals = document.getElementById('updateProductModal')
                 const modalBackdrops = document.getElementsByClassName('modal-backdrop');
                 modals.classList.remove('show')
                 document.body.removeChild(modalBackdrops[1]);
+                Swal.fire({
+                    title: 'Edit Product',
+                    text: ' successfully change your product!',
+                    icon: 'success'
+                    // text: data.message,
+                })
                 setProduct(data.payload)
             }
 
         })
+    }
+    const handleNewProduct = () => {
+        setId('')
+        setproductImage(null)
+        setproductName('')
+        setproductPrice('')
+        setDescription('')
     }
 
     const AddNewProduct = (e) => {
@@ -94,7 +80,7 @@ const AdminProductTable = props => {
         info.append('price', productPrice);
         info.append('description', description);
         info.append('productImage', productImage)
-        addNewProduct({ info,token }, (error, data) => {
+        addNewProduct({ info, token }, (error, data) => {
             if (error) console.log('fetching error', error)
             else {
                 const modals = document.getElementById('NewModal')
@@ -103,6 +89,12 @@ const AdminProductTable = props => {
                 document.body.removeChild(modalBackdrops[1]);
                 setProduct(data.payload)
                 if (data.success) {
+                    Swal.fire({
+                        title: 'Add New Product',
+                        text: ' successfully Added!',
+                        // text: data.message,
+                        icon: 'success',
+                    })
                     setId('')
                     setproductImage(null)
                     setproductName('')
@@ -116,10 +108,16 @@ const AdminProductTable = props => {
     const deleteProduct = (index) => {
         const rowData = products[index]
         const id = rowData.p_id
-        deleteAllProduct(id,token ,(error, data) => {
+        deleteAllProduct(id, token, (error, data) => {
             if (error) console.log('fetching error', error)
             else {
-                data.success && alert('delete done!')
+                data.success &&
+                    Swal.fire({
+                        title: 'Delete Product',
+                        text: ' delete successfully!',
+                        // text: data.message,
+                        icon: 'success',
+                    })
                 setProduct(data.payload)
             }
         })
@@ -175,12 +173,15 @@ const AdminProductTable = props => {
 
     return (
         <div className="container-fluid" style={{ fontSize: 16 }}>
+            <div className="p-4 text-center text-dark font-weight-bold" style={{ fontSize: '2rem' }}>
+                Product Page
+            </div>
             <div className="d-flex justify-content-end">
                 <button type="button"
                     data-toggle="modal" data-target="#NewModal"
                     className="btn btn-outline-success "
                     style={{ width: 100, height: 30, fontSize: '1.5rem', }}
-                    onClick={() => null}
+                    onClick={handleNewProduct}
                 >
                     <i className="fas fa-plus" /> <span className="px-2">Add New </span>
                 </button>
@@ -197,10 +198,10 @@ const AdminProductTable = props => {
                             <button type="button" className="close" data-dismiss="modal">×</button>
                         </div>
                         <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Name" onChange={(e) => setproductName(e.currentTarget.value)} value={productName} required />
+                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Name" onChange={(e) => setproductName(e.currentTarget.value)} value={productName} />
                         </div>
                         <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Price" onChange={(e) => setproductPrice(e.currentTarget.value)} value={productPrice} required />
+                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Price" onChange={(e) => setproductPrice(e.currentTarget.value)} value={productPrice} />
                         </div>
                         <div className="modal-body">
                             <textarea
@@ -210,9 +211,8 @@ const AdminProductTable = props => {
                                 placeholder={'Description'}
                                 onChange={e => setDescription(e.target.value)}
                                 value={description}
-                                required
+
                             />
-                            {/* <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Description" onChange={(e) => setDescription(e.currentTarget.value)} value={description} required /> */}
                         </div>
                         <div className="modal-body row px-3 m-0" style={{ height: 100 }}>
                             <input type="file" name="productImage" onChange={e => setproductImage(e.target.files[0])}
@@ -238,17 +238,17 @@ const AdminProductTable = props => {
                             <button type="button" className="close" data-dismiss="modal">×</button>
                         </div>
                         <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Name" onChange={(e) => setproductName(e.currentTarget.value)} value={productName} required />
+                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Add New Name" onChange={(e) => setproductName(e.currentTarget.value)} value={productName} required />
                         </div>
                         <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Price" onChange={(e) => setproductPrice(e.currentTarget.value)} value={productPrice} required />
+                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Add New Price" onChange={(e) => setproductPrice(e.currentTarget.value)} value={productPrice} required />
                         </div>
                         <div className="modal-body">
                             <textarea
                                 className='form-control mb-4'
                                 rows="3"
                                 style={{ height: 40, fontSize: '1.5rem', minHeight: '80px', maxHeight: '80px' }}
-                                placeholder={'Description'}
+                                placeholder={'Add Description'}
                                 onChange={e => setDescription(e.target.value)}
                                 value={description}
                                 required

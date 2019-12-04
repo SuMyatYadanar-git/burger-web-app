@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { withMedia } from 'react-media-query-hoc'
-import { memoize } from 'react-data-table-component'
+import Swal from 'sweetalert2'
 
-import tableTheme from "../../../common/TableThems"
-import KmTable from '../../../common/KmTable'
 import KmDataTable from '../../../common/KmDataTable'
-// import Mybtn from '../../../common/myButton'
+
 import { IMG_SERVER } from '../../../network/api'
 import { getAllProfile, deleteAllProfile, editProfile, addNewProfile } from '../../../network/profileFetcher'
 
@@ -33,21 +31,6 @@ const AdminProfileTable = props => {
         }
     }, [])
 
-    // const handleDeleteProfile = (row) => {
-    //     const token = JSON.parse(localStorage.getItem('data')).token
-    //     let info = {
-    //         id: row.id,
-    //         token: token
-    //     }
-    //     deleteAllProfile(info, (error, data) => {
-    //         if (error) console.log('fetching error', error)
-    //         else {
-    //             data.success === true && alert('delete successfully')
-    //             setProfileData(data.payload)
-    //         }
-    //     })
-    // }
-
     // if (profile.length === 0 ) return null;
 
     const handleEditProfile = (index) => {
@@ -68,16 +51,30 @@ const AdminProfileTable = props => {
         info.append('mail', mail)
         info.append('phone', phone)
         info.append('profileImage', image)
-        editProfile({ id, info ,token}, (error, data) => {
+        editProfile({ id, info, token }, (error, data) => {
             if (error) console.log('fetching error', error)
             else {
                 const modals = document.getElementById('updateProfileModal')
                 const modalBackdrops = document.getElementsByClassName('modal-backdrop');
                 modals.classList.remove('show')
                 document.body.removeChild(modalBackdrops[1]);
+                Swal.fire({
+                    title: 'Edit Profile',
+                    text: ' successfully change your profile!',
+                    icon: 'success'
+                    // text: data.message,
+                })
                 setProfileData(data.payload)
             }
         })
+    }
+    const handleNewProfile = () => {
+        setId('')
+        setName('')
+        setAddress('')
+        setMail('')
+        setPhone('')
+        setImage(null)
     }
     const AddNewProfile = (e) => {
         e.preventDefault()
@@ -87,7 +84,7 @@ const AdminProfileTable = props => {
         info.append('mail', mail)
         info.append('phone', phone)
         info.append('profileImage', image)
-        addNewProfile({ info,token }, (error, data) => {
+        addNewProfile({ info, token }, (error, data) => {
             if (error) console.log('fetching error', error)
             else {
                 const modals = document.getElementById('NewModal')
@@ -95,13 +92,19 @@ const AdminProfileTable = props => {
                 modals.classList.remove('show')
                 document.body.removeChild(modalBackdrops[1]);
                 setProfileData(data.payload)
-                if(data.success){
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Add Nwew Profile',
+                        text: ' successfully Added!',
+                        // text: data.message,
+                        icon: 'success',
+                    })
                     setId('')
                     setName('')
                     setAddress('')
                     setMail('')
                     setPhone('')
-                    setImage(null) 
+                    setImage(null)
                 }
             }
         })
@@ -109,10 +112,16 @@ const AdminProfileTable = props => {
     const deletProfile = (index) => {
         const rowData = profile[index]
         const id = rowData.id
-        deleteAllProfile(id,token, (error, data) => {
+        deleteAllProfile(id, token, (error, data) => {
             if (error) console.log('fetching error', error)
             else {
-                data.success && alert('delete done!')
+                data.success &&
+                    Swal.fire({
+                        title: 'Delete Profile',
+                        text: ' delete successfully!',
+                        // text: data.message,
+                        icon: 'success',
+                    })
                 setProfileData(data.payload)
             }
         })
@@ -174,12 +183,15 @@ const AdminProfileTable = props => {
 
     return (
         <div className="container-fluid" style={{ fontSize: 16 }}>
+            <div className="p-4 text-center text-dark font-weight-bold" style={{ fontSize: '2rem' }}>
+                Profile Page
+            </div>
             <div className="d-flex justify-content-end">
                 <button type="button"
                     data-toggle="modal" data-target="#NewModal"
                     className="btn btn-outline-success "
                     style={{ width: 100, height: 30, fontSize: '1.5rem', }}
-                    onClick={() => null}
+                    onClick={handleNewProfile}
                 >
                     <i className="fas fa-plus" /> <span className="px-2">Add New </span>
                 </button>
@@ -195,16 +207,16 @@ const AdminProfileTable = props => {
                             <button type="button" className="close" data-dismiss="modal">×</button>
                         </div>
                         <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Name" onChange={(e) => setName(e.currentTarget.value)} value={name} required />
+                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Name" onChange={(e) => setName(e.currentTarget.value)} value={name} />
                         </div>
                         <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Address" onChange={(e) => setAddress(e.currentTarget.value)} value={address} required />
+                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Address" onChange={(e) => setAddress(e.currentTarget.value)} value={address} />
                         </div>
                         <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Mail" onChange={(e) => setMail(e.currentTarget.value)} value={mail} required />
+                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Mail" onChange={(e) => setMail(e.currentTarget.value)} value={mail} />
                         </div>
                         <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Phone" onChange={(e) => setPhone(e.currentTarget.value)} value={phone} required />
+                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Phone" onChange={(e) => setPhone(e.currentTarget.value)} value={phone} pattern="^[0]{1}[9]{1}[0-9]{9}$" />
                         </div>
                         <div className="modal-body row px-3 m-0" style={{ height: 100 }}>
                             <input type="file" name="profileImage" onChange={e => setImage(e.target.files[0])}
@@ -229,16 +241,16 @@ const AdminProfileTable = props => {
                             <button type="button" className="close" data-dismiss="modal">×</button>
                         </div>
                         <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Name" onChange={(e) => setName(e.currentTarget.value)} value={name} required />
+                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Add New Name" onChange={(e) => setName(e.currentTarget.value)} value={name} required />
                         </div>
                         <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Address" onChange={(e) => setAddress(e.currentTarget.value)} value={address} required />
+                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Add New Address" onChange={(e) => setAddress(e.currentTarget.value)} value={address} required />
                         </div>
                         <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Mail" onChange={(e) => setMail(e.currentTarget.value)} value={mail} required />
+                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Add New Mail" onChange={(e) => setMail(e.currentTarget.value)} value={mail} required />
                         </div>
                         <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Phone" onChange={(e) => setPhone(e.currentTarget.value)} value={phone} required />
+                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Add New Phone" onChange={(e) => setPhone(e.currentTarget.value)} value={phone} pattern="^[0]{1}[9]{1}[0-9]{9}$" required />
                         </div>
                         <div className="modal-body row px-3 m-0" style={{ height: 100 }}>
                             <input type="file" name="profileImage" onChange={e => setImage(e.target.files[0])}

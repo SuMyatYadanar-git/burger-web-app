@@ -6,7 +6,6 @@ import bg1 from '../../../Images/bgt.jpg'
 
 import * as route from '../../../config/route.config'
 
-
 const SingleItem = props => {
     const { media } = props
     var bgtextstyle = {
@@ -20,8 +19,6 @@ const SingleItem = props => {
     }
 
     return (
-        <div className=''>
-
             <div>
                 <div style={{ fontFamily: 'Volkhov',fontSize: media.desktop ? 20 : media.tablet ? 16 : 13 }}>
                     <img src={bg1} alt="single-burger" className="img-fluid position-relative" />
@@ -32,9 +29,7 @@ const SingleItem = props => {
                   </p>
                     </div>
                 </div>
-
                 {/* ======================================================================================================== */}
-
                 {/* <div className="d-flex justify-content-between align-items-center p-4 bg-dark" >
                     <div style={{ fontSize: media.desktop ? 25 : 15 }}><span className="font-weight-bold text-center text-light"> Are you ready to order? </span></div>
                     <Link to={route.contant} style={{ textDecoration: 'none' }}>
@@ -46,8 +41,6 @@ const SingleItem = props => {
                 </div> */}
 
             </div >
-        </div>
-
     )
 }
 export default withMedia(SingleItem);

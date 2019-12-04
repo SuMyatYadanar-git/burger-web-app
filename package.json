@@ -21,7 +21,8 @@
     "react-sweet-progress": "^1.1.2",
     "react-table": "^6.10.3",
     "slick-carousel": "^1.8.1",
-    "styled-components": "^4.4.1"
+    "styled-components": "^4.4.1",
+    "sweetalert2": "^9.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
