@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { withMedia } from 'react-media-query-hoc'
 import Swal from 'sweetalert2'
 
 import KmDataTable from '../../../common/KmDataTable'
-
+import KmModal from '../../../common/KmModal'
 import { IMG_SERVER } from '../../../network/api'
 import { getAllProfile, deleteAllProfile, editProfile, addNewProfile } from '../../../network/profileFetcher'
+import { profilefilterHelper, productfilterHelper } from '../../../helper/filterHelper'
 
 const AdminProfileTable = props => {
     const { media } = props
@@ -16,6 +17,10 @@ const AdminProfileTable = props => {
     const [mail, setMail] = useState('')
     const [phone, setPhone] = useState('')
     const [image, setImage] = useState(null)
+    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen1, setIsOpen1] = useState(false)
+    const formRef = useRef(null)
+    const formRefUpdate = useRef(null)
 
     const token = JSON.parse(localStorage.getItem('data')).token;
 
@@ -31,9 +36,23 @@ const AdminProfileTable = props => {
         }
     }, [])
 
-    // if (profile.length === 0 ) return null;
+    if (profile.length === 0) return null;
+
+    const openModal = () => setIsOpen(true);
+    const closeModal = () => setIsOpen(false);
+
+    const openModal1 = () => setIsOpen1(true);
+    const closeModal1 = () => setIsOpen1(false);
+
+    const validate = () => formRef.current.reportValidity();
+    const validateUpdate = () => formRefUpdate.current.reportValidity();
+    // function validateEmail (email) {
+    //     const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    //     return regexp.test(email);
+    //   }
 
     const handleEditProfile = (index) => {
+        openModal();
         const rowData = profile[index]
         setId(rowData.id)
         setName(rowData.name)
@@ -45,30 +64,39 @@ const AdminProfileTable = props => {
 
     const updateProfile = (e) => {
         e.preventDefault()
-        let info = new FormData()
-        info.append('name', name)
-        info.append('address', address)
-        info.append('mail', mail)
-        info.append('phone', phone)
-        info.append('profileImage', image)
-        editProfile({ id, info, token }, (error, data) => {
-            if (error) console.log('fetching error', error)
-            else {
-                const modals = document.getElementById('updateProfileModal')
-                const modalBackdrops = document.getElementsByClassName('modal-backdrop');
-                modals.classList.remove('show')
-                document.body.removeChild(modalBackdrops[1]);
-                Swal.fire({
-                    title: 'Edit Profile',
-                    text: ' successfully change your profile!',
-                    icon: 'success'
-                    // text: data.message,
-                })
-                setProfileData(data.payload)
-            }
-        })
+
+        const isFilter = profilefilterHelper(profile, id, name)
+        if (isFilter) {
+            Swal.fire({
+                title: 'Profile Name already exist!',
+                text: 'duplicate!',
+                icon: 'error'
+            })
+        } else {
+            let info = new FormData()
+            info.append('name', name)
+            info.append('address', address)
+            info.append('mail', mail)
+            info.append('phone', phone)
+            info.append('profileImage', image)
+            editProfile({ id, info, token }, (error, data) => {
+                if (error) console.log('fetching error', error)
+                else {
+                    Swal.fire({
+                        title: 'Edit Profile',
+                        text: ' successfully change your profile!',
+                        icon: 'success'
+                    })
+                    setIsOpen(false)
+                    // userNameInput.current.focus();
+                    setProfileData(data.payload)
+                }
+            })
+        }
+
     }
     const handleNewProfile = () => {
+        openModal1()
         setId('')
         setName('')
         setAddress('')
@@ -78,36 +106,41 @@ const AdminProfileTable = props => {
     }
     const AddNewProfile = (e) => {
         e.preventDefault()
-        let info = new FormData()
-        info.append('name', name)
-        info.append('address', address)
-        info.append('mail', mail)
-        info.append('phone', phone)
-        info.append('profileImage', image)
-        addNewProfile({ info, token }, (error, data) => {
-            if (error) console.log('fetching error', error)
-            else {
-                const modals = document.getElementById('NewModal')
-                const modalBackdrops = document.getElementsByClassName('modal-backdrop');
-                modals.classList.remove('show')
-                document.body.removeChild(modalBackdrops[1]);
-                setProfileData(data.payload)
-                if (data.success) {
-                    Swal.fire({
-                        title: 'Add Nwew Profile',
-                        text: ' successfully Added!',
-                        // text: data.message,
-                        icon: 'success',
-                    })
-                    setId('')
-                    setName('')
-                    setAddress('')
-                    setMail('')
-                    setPhone('')
-                    setImage(null)
+        const isFilter = profilefilterHelper(profile, id, name)
+        if (isFilter) {
+            Swal.fire({
+                title: 'Profile Name already exist!',
+                text: 'duplicate!',
+                icon: 'error'
+            })
+        } else {
+            let info = new FormData()
+            info.append('name', name)
+            info.append('address', address)
+            info.append('mail', mail)
+            info.append('phone', phone)
+            info.append('profileImage', image)
+            addNewProfile({ info, token }, (error, data) => {
+                if (error) console.log('fetching error', error)
+                else {
+                    setProfileData(data.payload.reverse())
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Add New Profile',
+                            text: ' successfully Added!',
+                            icon: 'success',
+                        })
+                        setIsOpen1(false)
+                        setId('')
+                        setName('')
+                        setAddress('')
+                        setMail('')
+                        setPhone('')
+                        setImage(null)
+                    }
                 }
-            }
-        })
+            })
+        }
     }
     const deletProfile = (index) => {
         const rowData = profile[index]
@@ -126,7 +159,6 @@ const AdminProfileTable = props => {
             }
         })
     }
-
     const dataRow = profile.reduce((r, c, i) => {
         c.image = <img className="img-thumbnail" alt='Profile' style={{ height: 75, width: 75 }} src={`${IMG_SERVER}/${c.img}`} />
         c.update = <button data-toggle="modal" data-target="#updateProfileModal" className="btn btn-primary py-3 px-5" onClick={() => handleEditProfile(i)} style={{ fontSize: 15 }}><span><i className="fa fa-edit">Update</i></span></button>
@@ -180,7 +212,7 @@ const AdminProfileTable = props => {
         rows: dataRow
     };
 
-
+    // console.log(image)
     return (
         <div className="container-fluid" style={{ fontSize: 16 }}>
             <div className="p-4 text-center text-dark font-weight-bold" style={{ fontSize: '2rem' }}>
@@ -198,76 +230,164 @@ const AdminProfileTable = props => {
             </div>
 
             <KmDataTable data={TableData} />
-
-            <form className="modal fade" id="updateProfileModal" onSubmit={e => updateProfile(e)}>
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h4 className="modal-title">{"EDIT PROFILE"}</h4>
-                            <button type="button" className="close" data-dismiss="modal">×</button>
-                        </div>
-                        <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Name" onChange={(e) => setName(e.currentTarget.value)} value={name} />
-                        </div>
-                        <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Address" onChange={(e) => setAddress(e.currentTarget.value)} value={address} />
-                        </div>
-                        <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Mail" onChange={(e) => setMail(e.currentTarget.value)} value={mail} />
-                        </div>
-                        <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Phone" onChange={(e) => setPhone(e.currentTarget.value)} value={phone} pattern="^[0]{1}[9]{1}[0-9]{9}$" />
-                        </div>
-                        <div className="modal-body row px-3 m-0" style={{ height: 100 }}>
-                            <input type="file" name="profileImage" onChange={e => setImage(e.target.files[0])}
-                                style={{ height: 40, fontSize: '1.5rem' }} className="form-control col-6"
-                                accept=".jpg,.JPEG,.png,.PNG,.gif,.GIF,.tiff,.TIFF"
-                            />
-                        </div>
-                        <div className="modal-footer py-4">
-                            <button className="btn btn-primary py-2 px-4" style={{ fontSize: 14 }} > <span><i className="fa fa-edit"></i></span>Save</button>
-                            <button className="btn btn-warning py-2 px-4" data-dismiss="modal" style={{ fontSize: 14 }}>Cancel</button>
-                        </div>
+            {/* ================================edit profile=================================================================================================== */}
+            <KmModal isOpen={isOpen}>
+                <form ref={formRefUpdate} onSubmit={e => updateProfile(e)}>
+                    <div className="d-flex justify-content-between py-2">
+                        <h4 >{"EDIT PROFILE"}</h4>
+                        <button className='btn' onClick={closeModal}><i className="fa fa-times" /></button>
                     </div>
-                </div>
-            </form>
-            {/* =================================================================================================== */}
-
-            <form className="modal fade" id="NewModal" onSubmit={e => AddNewProfile(e)}>
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h4 className="modal-title">{"ADD NEW PROFILE"}</h4>
-                            <button type="button" className="close" data-dismiss="modal">×</button>
-                        </div>
-                        <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Add New Name" onChange={(e) => setName(e.currentTarget.value)} value={name} required />
-                        </div>
-                        <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Add New Address" onChange={(e) => setAddress(e.currentTarget.value)} value={address} required />
-                        </div>
-                        <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Add New Mail" onChange={(e) => setMail(e.currentTarget.value)} value={mail} required />
-                        </div>
-                        <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Add New Phone" onChange={(e) => setPhone(e.currentTarget.value)} value={phone} pattern="^[0]{1}[9]{1}[0-9]{9}$" required />
-                        </div>
-                        <div className="modal-body row px-3 m-0" style={{ height: 100 }}>
-                            <input type="file" name="profileImage" onChange={e => setImage(e.target.files[0])}
-                                style={{ height: 40, fontSize: '1.5rem' }} className="form-control col-6"
-                                accept=".jpg,.JPEG,.png,.PNG,.gif,.GIF,.tiff,.TIFF"
-                                required
-                            />
-                        </div>
-                        <div className="modal-footer py-4">
-                            <button className="btn btn-primary py-2 px-4" style={{ fontSize: 14 }} > <span><i className="fa fa-edit"></i></span>Save</button>
-                            <button className="btn btn-warning py-2 px-4" data-dismiss="modal" style={{ fontSize: 14 }}>Cancel</button>
-                        </div>
+                    <div className="py-2">
+                        <input className="form-control"
+                            // ref={userNameInput}
+                            style={{ height: 40, fontSize: '1.5rem' }}
+                            type="text" placeholder="Name"
+                            onChange={(e) => setName(e.currentTarget.value)}
+                            value={name}
+                        />
                     </div>
-                </div>
-            </form>
+                    <div className="py-2" >
+                        <input className="form-control"
+                            style={{ height: 40, fontSize: '1.5rem' }}
+                            type="text" placeholder="Address"
+                            onChange={(e) => setAddress(e.currentTarget.value)}
+                            value={address} />
+                    </div>
+                    <div className="py-2" >
+                        {/* abc@example.com # Minimum three characters
+    ABC.xyz@example.com # Accepts Caps as well.
+    abce.xyz@example.co.in # Accepts . before @ */}
+                        <input className="form-control"
+                            style={{ height: 40, fontSize: '1.5rem' }}
+                            type="email" placeholder="Mail"
+                            onChange={(e) => setMail(e.currentTarget.value)}
+                            pattern="[A-Za-z0-9._%+-]{3,}@[a-zA-Z]{3,}([.]{1}[a-zA-Z]{2,}|[.]{1}[a-zA-Z]{2,}[.]{1}[a-zA-Z]{2,})"
+                            value={mail}
+                        />
+                    </div>
+                    <div className="py-2" >
+                        <input className="form-control"
+                            style={{ height: 40, fontSize: '1.5rem' }}
+                            type="text" placeholder="Phone"
+                            onChange={(e) => setPhone(e.currentTarget.value)}
+                            value={phone}
+                            pattern="[0-9]*"
+                        // pattern="[0-9]{9}"
+                        // max={10}
+                        // min={1}
+                        // pattern="^[0]{1}[9]{1}[0-9]{9}$"
+                        />
+                    </div>
+                    <div className="py-2" >
+                        <img src={`${IMG_SERVER}/${image}`} className="img-thumbnail w-100" />
+                        <label htmlFor="upload-photo" style={fileStyle}>Upload Image</label>
+                        <input type="file" name="photo"
+                            id="upload-photo"
+                            style={photoStyle}
+                            onChange={e => setImage(e.target.files[0])}
+                            accept="image/*"
+                        />
+                    </div>
+                    <div className="py-2 d-flex justify-content-end">
+                        <button className="btn btn-primary py-2 px-4 mr-2" style={{ fontSize: 14 }}
+                            onClick={validateUpdate}
+                        >
+                            <span><i className="fa fa-edit"></i></span>Save
+                        </button>
+                        <button className="btn btn-warning py-2 px-4" style={{ fontSize: 14 }} onClick={closeModal}>Cancel</button>
+                    </div>
+                </form>
+            </KmModal>
+
+            {/* =========================insert modal========================================================================== */}
+            <KmModal isOpen={isOpen1}>
+                <form ref={formRef} onSubmit={e => AddNewProfile(e)}>
+                    <div className="d-flex justify-content-between py-2">
+                        <h4 >{"ADD NEW PROFILE"}</h4>
+                        <button className='btn' onClick={closeModal1}><i className="fa fa-times" /></button>
+                    </div>
+                    <div className="py-2">
+                        <input className="form-control"
+                            style={{ height: 40, fontSize: '1.5rem' }}
+                            type="text" placeholder="Name"
+                            onChange={(e) => setName(e.currentTarget.value)}
+                            value={name}
+                            required
+                        />
+                    </div>
+                    <div className="py-2" >
+                        <input className="form-control"
+                            style={{ height: 40, fontSize: '1.5rem' }}
+                            type="text" placeholder="Address"
+                            onChange={(e) => setAddress(e.currentTarget.value)}
+                            value={address}
+                            autofocus
+                            required
+                        />
+                    </div>
+                    <div className="py-2" >
+                        <input className="form-control"
+                            style={{ height: 40, fontSize: '1.5rem' }}
+                            type="email" placeholder="Mail"
+                            onChange={(e) => setMail(e.currentTarget.value)}
+                            value={mail}
+                            pattern="[A-Za-z0-9._%+-]{3,}@[a-zA-Z]{3,}([.]{1}[a-zA-Z]{2,}|[.]{1}[a-zA-Z]{2,}[.]{1}[a-zA-Z]{2,})"
+                            required
+                        />
+                    </div>
+                    <div className="py-2" >
+                        <input className="form-control"
+                            style={{ height: 40, fontSize: '1.5rem' }}
+                            type="text" placeholder="Phone"
+                            onChange={(e) => setPhone(e.currentTarget.value)}
+                            value={phone}
+                            pattern="[0-9]*"
+                            required
+                        // pattern="^[0]{1}[9]{1}[0-9]{9}$"
+                        />
+                    </div>
+                    <div className="py-2" >
+                        {/* <img src={`${IMG_SERVER}/${image}`} className="img-thumbnail w-100" /> */}
+                        <label htmlFor="upload-photo" style={fileStyle}>Upload Image</label>
+                        <input type="file" name="photo"
+                            id="upload-photo"
+                            style={photoStyle}
+                            onChange={e => setImage(e.target.files[0])}
+                            accept="image/*"
+                            required
+                        />
+                        {image !== null && <img src={`${IMG_SERVER}/${image}`} className="img-thumbnail w-100" />}
+
+                    </div>
+                    <div className="py-2 d-flex justify-content-end">
+                        <button className="btn btn-primary py-2 px-4 mr-2" style={{ fontSize: 14 }} onClick={validate}>
+                            <span><i className="fa fa-edit"></i></span>Save
+                        </button>
+                        <button className="btn btn-warning py-2 px-4" style={{ fontSize: 14 }} onClick={closeModal1}>Cancel</button>
+                    </div>
+                </form>
+            </KmModal>
+
         </div>
     )
 }
 
 export default withMedia(AdminProfileTable)
+
+const fileStyle = {
+    display: "block",
+    background: '#da3b4a',
+    color: 'white',
+    width: '210px',
+    height: '40px',
+    padding: '9px 0px',
+    textAlign: 'center',
+    borderRadius: '5px',
+    marginTop: '11px',
+    cursor: 'pointer',
+}
+const photoStyle = {
+    opacity: 0,
+    position: 'absolute',
+    zIndex: -1,
+}

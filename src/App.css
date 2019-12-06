@@ -30,3 +30,6 @@ input[type=search] {
 .modal-backdrop.fade {
   z-index: 0!important;
 }
+.page-link{
+  position:unset!important ;
+}

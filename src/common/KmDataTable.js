@@ -10,6 +10,8 @@ const KmDataTable = ({ data }) => {
             responsive
             noBottomColumns
             data={data}
+            // sorting={true}
+            // order={['age', 'asc' ]}
         />
     );
 }

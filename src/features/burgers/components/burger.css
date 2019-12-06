@@ -48,9 +48,8 @@
 } */
 .img-con{
     overflow:hidden;
-    transition: al 1s linear;
+    transition: all 0.5s linear;
 }
 .img-con:hover {
-   
-    transform :scale(1.2);
+    transform :scale(1.1);
 }

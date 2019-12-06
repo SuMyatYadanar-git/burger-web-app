@@ -56,11 +56,11 @@ const AdminUserSetting = props => {
         changeUserName({ info }, (error, data) => {
             if (error) console.log('fetching error', error)
             else {
-                // Swal.fire({
-                //     title: 'Change User Name',
-                //     text: ' update name successfully!',
-                //     icon: 'success',
-                // })
+                Swal.fire({
+                    title: 'Change User Name',
+                    text: ' update name successfully!',
+                    icon: 'success',
+                })
                 const userInfo = { ...JSON.parse(localStorage.getItem('data')), payload: data.payload }
                 localStorage.setItem('data', JSON.stringify(userInfo))
                 const updateName = data.payload === undefined ? 'admin' : data.payload[0].user_name
@@ -101,7 +101,7 @@ const AdminUserSetting = props => {
                     <input className="btn btn-warning form-control bg-warning  col-lg-5"
                         style={{ height: '3rem', fontSize: '1.5rem' }}
                         type="submit"
-                        onClick={() => console.log('hellooooo')}
+                        onClick={null}
                     />
 
                 </div>

@@ -37,7 +37,7 @@ export const addNewProduct =({info,token},callback)=>{
 }
 
 export const editProduct = ({ id, info,token }, callback) => {
-    console.log(id, info)
+    
     fetch(API_URL + `/product/${id}`, {
         method: 'PUT',
         headers: {

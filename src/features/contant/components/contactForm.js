@@ -25,7 +25,7 @@ const CommentForm = (props) => {
             }
             else {
                 if (data.success) {
-                    console.log(data.data.accpted)
+                    // console.log(data.data.accpted)
                     Swal.fire({
                         title: 'Your Email Sent Successfully',
                         text: ' thanks for messaging to us!',
@@ -66,6 +66,7 @@ const CommentForm = (props) => {
                         placeholder={'Email'}
                         onChange={e => setMail(e.target.value)}
                         value={mail}
+                        pattern="[A-Za-z0-9._%+-]{3,}@[a-zA-Z]{3,}([.]{1}[a-zA-Z]{2,}|[.]{1}[a-zA-Z]{2,}[.]{1}[a-zA-Z]{2,})"
                         required
                     />
 

@@ -3,8 +3,10 @@ import { withMedia } from 'react-media-query-hoc'
 import Swal from 'sweetalert2'
 
 import KmDataTable from '../../../common/KmDataTable'
+import KmModal from '../../../common/KmModal'
 import { IMG_SERVER } from '../../../network/api'
 import { getAllProduct, deleteAllProduct, editProduct, addNewProduct } from '../../../network/productFetcher'
+import { productfilterHelper } from '../../../helper/filterHelper'
 
 
 const AdminProductTable = props => {
@@ -15,6 +17,8 @@ const AdminProductTable = props => {
     const [productName, setproductName] = useState('')
     const [productPrice, setproductPrice] = useState('')
     const [description, setDescription] = useState('')
+    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen1, setIsOpen1] = useState(false)
 
     const token = JSON.parse(localStorage.getItem('data')).token;
 
@@ -32,7 +36,14 @@ const AdminProductTable = props => {
 
     if (products.length === 0) return null;
 
+    const openModal = () => setIsOpen(true);
+    const closeModal = () => setIsOpen(false);
+
+    const openModal1 = () => setIsOpen1(true);
+    const closeModal1 = () => setIsOpen1(false);
+
     const handleEditProduct = (index) => {
+        openModal()
         const rowData = products[index]
         setId(rowData.p_id)
         setproductImage(rowData.p_img)
@@ -42,69 +53,82 @@ const AdminProductTable = props => {
     }
     const updateProduct = (e) => {
         e.preventDefault()
-        let info = new FormData();
-        info.append('name', productName);
-        info.append('price', productPrice);
-        info.append('description', description);
-        info.append('productImage', productImage)
-        editProduct({ id, info, token }, (error, data) => {
-            if (error) console.log('fetching error', error)
-            else {
-                const modals = document.getElementById('updateProductModal')
-                const modalBackdrops = document.getElementsByClassName('modal-backdrop');
-                modals.classList.remove('show')
-                document.body.removeChild(modalBackdrops[1]);
-                Swal.fire({
-                    title: 'Edit Product',
-                    text: ' successfully change your product!',
-                    icon: 'success'
-                    // text: data.message,
-                })
-                setProduct(data.payload)
-            }
+        const isFilter = productfilterHelper(products, id, productName, productPrice, description, productImage)
+        if (isFilter) {
+            Swal.fire({
+                title: 'Product Name already exist!',
+                text: 'duplicate!',
+                icon: 'error'
+            })
+        } else {
+            let info = new FormData();
+            info.append('name', productName);
+            info.append('price', productPrice);
+            info.append('description', description);
+            info.append('productImage', productImage)
+            editProduct({ id, info, token }, (error, data) => {
+                if (error) console.log('fetching error', error)
+                else {
 
-        })
+                    Swal.fire({
+                        title: 'Edit Product',
+                        text: ' successfully change your product!',
+                        icon: 'success'
+                        // text: data.message,
+                    })
+                    setIsOpen(false)
+                    setProduct(data.payload)
+                }
+            })
+        }
+
     }
     const handleNewProduct = () => {
+        openModal1()
         setId('')
         setproductImage(null)
         setproductName('')
         setproductPrice('')
         setDescription('')
     }
-
     const AddNewProduct = (e) => {
         e.preventDefault()
-        let info = new FormData();
-        info.append('name', productName);
-        info.append('price', productPrice);
-        info.append('description', description);
-        info.append('productImage', productImage)
-        addNewProduct({ info, token }, (error, data) => {
-            if (error) console.log('fetching error', error)
-            else {
-                const modals = document.getElementById('NewModal')
-                const modalBackdrops = document.getElementsByClassName('modal-backdrop');
-                modals.classList.remove('show')
-                document.body.removeChild(modalBackdrops[1]);
-                setProduct(data.payload)
-                if (data.success) {
-                    Swal.fire({
-                        title: 'Add New Product',
-                        text: ' successfully Added!',
-                        // text: data.message,
-                        icon: 'success',
-                    })
-                    setId('')
-                    setproductImage(null)
-                    setproductName('')
-                    setproductPrice('')
-                    setDescription('')
+        const isFilter = productfilterHelper(products, id, productName, productPrice, description, productImage)
+        if (isFilter) {
+            Swal.fire({
+                title: ' Product Name already exist!',
+                text: 'duplicate!',
+                icon: 'error'
+            })
+            setIsOpen(false)
+        } else {
+            let info = new FormData();
+            info.append('name', productName);
+            info.append('price', productPrice);
+            info.append('description', description);
+            info.append('productImage', productImage)
+            addNewProduct({ info, token }, (error, data) => {
+                if (error) console.log('fetching error', error)
+                else {
+                    setProduct(data.payload.reverse())
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Add New Product',
+                            text: ' successfully Added!',
+                            // text: data.message,
+                            icon: 'success',
+                        })
+                        setIsOpen1(false)
+                        setId('')
+                        setproductImage(null)
+                        setproductName('')
+                        setproductPrice('')
+                        setDescription('')
+                    }
                 }
-            }
-        })
+            })
+        }
     }
-
     const deleteProduct = (index) => {
         const rowData = products[index]
         const id = rowData.p_id
@@ -170,7 +194,6 @@ const AdminProductTable = props => {
         rows: dataRow
     };
 
-
     return (
         <div className="container-fluid" style={{ fontSize: 16 }}>
             <div className="p-4 text-center text-dark font-weight-bold" style={{ fontSize: '2rem' }}>
@@ -190,89 +213,133 @@ const AdminProductTable = props => {
             <KmDataTable data={TableData} />
 
             {/* ===================================================================== */}
-            <form className="modal fade" id="updateProductModal" onSubmit={e => updateProduct(e)}>
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h4 className="modal-title">{"EDIT PRODUCT"}</h4>
-                            <button type="button" className="close" data-dismiss="modal">×</button>
-                        </div>
-                        <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Name" onChange={(e) => setproductName(e.currentTarget.value)} value={productName} />
-                        </div>
-                        <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Price" onChange={(e) => setproductPrice(e.currentTarget.value)} value={productPrice} />
-                        </div>
-                        <div className="modal-body">
-                            <textarea
-                                className='form-control mb-4'
-                                rows="3"
-                                style={{ height: 40, fontSize: '1.5rem', minHeight: '80px', maxHeight: '80px' }}
-                                placeholder={'Description'}
-                                onChange={e => setDescription(e.target.value)}
-                                value={description}
-
-                            />
-                        </div>
-                        <div className="modal-body row px-3 m-0" style={{ height: 100 }}>
-                            <input type="file" name="productImage" onChange={e => setproductImage(e.target.files[0])}
-                                style={{ height: 40, fontSize: '1.5rem' }} className="form-control col-6"
-                                accept=".jpg,.JPEG,.png,.PNG,.gif,.GIF,.tiff,.TIFF"
-                            />
-                        </div>
-
-                        <div className="modal-footer py-4">
-                            <button className="btn btn-primary py-2 px-4" style={{ fontSize: 14 }} > <span><i className="fa fa-edit"></i></span>Save</button>
-                            <button className="btn btn-warning py-2 px-4" data-dismiss="modal" style={{ fontSize: 14 }}>Cancel</button>
-                        </div>
-                    </div>
+            <KmModal isOpen={isOpen}>
+                <div className="d-flex justify-content-between py-2">
+                    <h4 >{"EDIT PRODUCT"}</h4>
+                    <button className='btn' onClick={closeModal}><i className="fa fa-times" /></button>
                 </div>
-            </form>
-            {/* ============================================================================================================================ */}
-
-            <form className="modal fade" id="NewModal" onSubmit={e => AddNewProduct(e)}>
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h4 className="modal-title">{"ADD NEW PRODUCT"}</h4>
-                            <button type="button" className="close" data-dismiss="modal">×</button>
-                        </div>
-                        <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Add New Name" onChange={(e) => setproductName(e.currentTarget.value)} value={productName} required />
-                        </div>
-                        <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Add New Price" onChange={(e) => setproductPrice(e.currentTarget.value)} value={productPrice} required />
-                        </div>
-                        <div className="modal-body">
-                            <textarea
-                                className='form-control mb-4'
-                                rows="3"
-                                style={{ height: 40, fontSize: '1.5rem', minHeight: '80px', maxHeight: '80px' }}
-                                placeholder={'Add Description'}
-                                onChange={e => setDescription(e.target.value)}
-                                value={description}
-                                required
-                            />
-                            {/* <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Description" onChange={(e) => setDescription(e.currentTarget.value)} value={description} required /> */}
-                        </div>
-                        <div className="modal-body row px-3 m-0" style={{ height: 100 }}>
-                            <input type="file" name="productImage" onChange={e => setproductImage(e.target.files[0])}
-                                style={{ height: 40, fontSize: '1.5rem' }} className="form-control col-6"
-                                accept=".jpg,.JPEG,.png,.PNG,.gif,.GIF,.tiff,.TIFF"
-                                required
-                            />
-                        </div>
-
-                        <div className="modal-footer py-4">
-                            <button className="btn btn-primary py-2 px-4" style={{ fontSize: 14 }} > <span><i className="fa fa-edit"></i></span>Save</button>
-                            <button className="btn btn-warning py-2 px-4" data-dismiss="modal" style={{ fontSize: 14 }}>Cancel</button>
-                        </div>
-                    </div>
+                <div className="py-2">
+                    <input className="form-control"
+                        style={{ height: 40, fontSize: '1.5rem' }}
+                        type="text" placeholder="Name"
+                        onChange={(e) => setproductName(e.currentTarget.value)}
+                        value={productName}
+                    />
                 </div>
-            </form>
+                <div className="py-2" >
+                    <input className="form-control"
+                        style={{ height: 40, fontSize: '1.5rem' }}
+                        type="number"
+                        placeholder="Price"
+                        onChange={(e) => setproductPrice(e.currentTarget.value)}
+                        value={productPrice}
+                    />
+                </div>
+                <div className="py-2" >
+                    <textarea
+                        className='form-control mb-4'
+                        rows="3"
+                        style={{ height: 40, fontSize: '1.5rem', minHeight: '80px', maxHeight: '80px' }}
+                        placeholder={'Description'}
+                        onChange={e => setDescription(e.target.value)}
+                        value={description}
+                    />
+                </div>
+                <div className="py-1">
+                    <img src={`${IMG_SERVER}/${productImage}`} className="img-thumbnail w-100" />
+                    <label htmlFor="upload-photo" style={fileStyle}>Upload Image</label>
+                    <input type="file" name="photo"
+                        id="upload-photo"
+                        style={photoStyle}
+                        onChange={e => setproductImage(e.target.files[0])}
+                        accept="image/*"
+                    />
+                </div>
+                <div className="py-2 d-flex justify-content-end">
+                    <button className="btn btn-primary py-2 px-4 mr-2" style={{ fontSize: 14 }} onClick={e => updateProduct(e)}>
+                        <span><i className="fa fa-edit"></i></span>update
+                        </button>
+                    <button className="btn btn-warning py-2 px-4" style={{ fontSize: 14 }} onClick={closeModal}>Cancel</button>
+                </div>
+
+            </KmModal>
+            {/* =========================== insert modal  ================================================================================================= */}
+            <KmModal isOpen={isOpen1}>
+                <form onSubmit={e => AddNewProduct(e)}>
+                    <div className="d-flex justify-content-between py-2">
+                        <h4 >{"ADD NEW PRODUCT"}</h4>
+                        <button className='btn' onClick={closeModal1}><i className="fa fa-times" /></button>
+                    </div>
+                    <div className="py-2">
+                        <input className="form-control"
+                            style={{ height: 40, fontSize: '1.5rem' }}
+                            type="text" placeholder="Name"
+                            onChange={(e) => setproductName(e.currentTarget.value)}
+                            value={productName}
+                            required
+                        />
+                    </div>
+                    <div className="py-2" >
+                        <input className="form-control"
+                            style={{ height: 40, fontSize: '1.5rem' }}
+                            type="text" placeholder="Price"
+                            onChange={(e) => setproductPrice(e.currentTarget.value)}
+                            value={productPrice}
+                            required
+                        />
+                    </div>
+                    <div className="py-2" >
+                        <textarea
+                            className='form-control mb-4'
+                            rows="3"
+                            style={{ height: 40, fontSize: '1.5rem', minHeight: '80px', maxHeight: '80px' }}
+                            placeholder={'Description'}
+                            onChange={e => setDescription(e.target.value)}
+                            value={description}
+                            required
+                        />
+                    </div>
+                    <div className="py-1">
+                        {/* <img src={`${IMG_SERVER}/${productImage}`} className="img-thumbnail w-100"  /> */}
+                        <label htmlFor="upload-photo" style={fileStyle}>Upload Image</label>
+                        <input type="file" name="photo"
+                            id="upload-photo"
+                            style={photoStyle}
+                            onChange={e => setproductImage(e.target.files[0])}
+                            accept="image/*"
+                        />
+                        {productImage !== null && <img src={`${IMG_SERVER}/${productImage}`} className="img-thumbnail w-100" />}
+                    </div>
+                    <div className="py-2 d-flex justify-content-end">
+                        <button type="submit" className="btn btn-primary py-2 px-4 mr-2" style={{ fontSize: 14 }} >
+                            <span><i className="fa fa-edit"></i></span>Save
+                        </button>
+                        <button className="btn btn-warning py-2 px-4" style={{ fontSize: 14 }} onClick={closeModal1}>Cancel</button>
+                    </div>
+                </form>
+            </KmModal>
+
 
 
         </div>
     )
 }
 export default withMedia(AdminProductTable);
+
+const fileStyle = {
+    display: "block",
+    background: '#da3b4a',
+    color: 'white',
+    width: '210px',
+    height: '40px',
+    padding: '9px 0px',
+    textAlign: 'center',
+    borderRadius: '5px',
+    marginTop: '11px',
+    cursor: 'pointer',
+}
+const photoStyle = {
+    opacity: 0,
+    position: 'absolute',
+    zIndex: -1,
+}

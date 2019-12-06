@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Swal from 'sweetalert2'
 import '../../../App.css'
 import { withRouter } from 'react-router-dom'
@@ -11,6 +11,7 @@ const LoginContainer = props => {
     const [name, setName] = useState('')
     const [pwd, setPwd] = useState('')
     const [pwdView, setpwdView] = useState(false)
+    const userNameInput = useRef('')
 
     const onClickLog = (e) => {
         e.preventDefault()
@@ -22,10 +23,10 @@ const LoginContainer = props => {
                 props.history.replace(`/${route.adminProfile}`)
             }
             else {
+                userNameInput.current.focus();
                 Swal.fire({
                     title: 'username and password incorret',
-                    text:'please login again',
-                    // text: data.message,
+                    text: 'please login again',
                     icon: 'error',
                 })
                 setName('')
@@ -37,7 +38,7 @@ const LoginContainer = props => {
     return (
         <div className="container-fluid p-0">
             <div className="bg-dim full-bg-size ">
-                {/* ====================================================================================== */}
+ {/* ====================================================================================================================== */}
                 <div className="text-light " style={{ position: 'absolute', top: '20%', width: '98%', paddingLeft: '2%' }}>
                     <div className="d-flex flex-row justify-content-center ">
                         <div className="col-12 col-sm-8 col-md-8 col-lg-4">
@@ -46,11 +47,12 @@ const LoginContainer = props => {
                                 <h4 className="pt-2 pb-3">Login to your Account</h4>
                             </div>
                             {/* onSubmit={(e) => { onClickLog(); e.preventDefault() }} */}
-                            <form onSubmit={(e) => { onClickLog(e) }}>
-                                <div className="form-group pt-3">
-                                    <label style={{ fontSize: 18 }}>Name:</label>
+                            <form onSubmit={(e) => { onClickLog(e) && document.getElementById('userName').focus() }}>
+                                <div className="form-group pt-3 ">
+                                    <label style={{ fontSize: 18 }} className=" d-flex align-items-start">Name:</label>
                                     {/* <input type="text" className="form-control" pattern="^[0]{1}[9]{1}[0-9]{9}$" required /> */}
                                     <input type="text"
+                                        ref={userNameInput}
                                         className="form-control w-100 "
                                         style={{ height: '4rem', fontSize: 14, }}
                                         placeholder="Username"
@@ -58,11 +60,12 @@ const LoginContainer = props => {
                                         aria-describedby="addon-wrapping"
                                         onChange={(e) => setName(e.target.value)}
                                         value={name}
+                                        autoFocus={true}
                                         required
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label style={{ fontSize: 18 }}>Password:</label>
+                                    <label style={{ fontSize: 18 }} className=" d-flex align-items-start">Password:</label>
                                     <input
                                         type={pwdView ? "text" : "password"}
                                         className="form-control w-100"

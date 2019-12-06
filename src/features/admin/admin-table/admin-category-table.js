@@ -2,15 +2,20 @@ import React, { useState, useEffect } from 'react'
 import { withMedia } from 'react-media-query-hoc'
 import Swal from 'sweetalert2'
 import { getAllCategory, deleteAllCategory, editCategory, addNewCategory } from '../../../network/categoryFetcher'
+import { categoryfilterHelper } from '../../../helper/filterHelper'
 import { IMG_SERVER } from '../../../network/api'
 import KmDataTable from '../../../common/KmDataTable'
+import KmModal from '../../../common/KmModal'
 
 const AdminCategoryTable = props => {
     const [category, setCategory] = useState([])
     const [categoryName, setCategoryName] = useState('')
     const [categoryImage, setCategoryImage] = useState(null)
     const [categoryId, setCategoryId] = useState('')
+    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen1, setIsOpen1] = useState(false)
 
+    // let fileUpload = null
     const { media } = props
     const token = JSON.parse(localStorage.getItem('data')).token;
 
@@ -25,8 +30,13 @@ const AdminCategoryTable = props => {
             })
         }
     }, [])
-
     if (category.length === 0) return null;
+
+    const openModal = () => setIsOpen(true);
+    const closeModal = () => setIsOpen(false);
+
+    const openModal1 = () => setIsOpen1(true);
+    const closeModal1 = () => setIsOpen1(false);
 
     const handleDeleteCategory = (index) => {
         const rowData = category[index]
@@ -38,72 +48,86 @@ const AdminCategoryTable = props => {
                     Swal.fire({
                         title: 'Delete category',
                         text: ' delete successfully!',
-                        // text: data.message,
                         icon: 'success',
                     })
                 setCategory(data.payload)
             }
         })
     }
+
     const handleEditCategory = (index) => {
+        openModal();
         const rowData = category[index]
         setCategoryName(rowData.c_name)
         setCategoryImage(rowData.c_img)
         setCategoryId(rowData.c_id)
-    };
+    }
+
     const updateCategory = (e) => {
-        e.preventDefault()
-        let info = new FormData();
-        info.append('name', categoryName);
-        info.append('categoryImage', categoryImage);
-        editCategory({ categoryId, info, token }, (error, data) => {
-            if (error) console.log('fetching error', error)
-            else {
-                const modals = document.getElementById('updateModal')
-                const modalBackdrops = document.getElementsByClassName('modal-backdrop');
-                modals.classList.remove('show')
-                document.body.removeChild(modalBackdrops[1]);
-                Swal.fire({
-                    title: 'Edit Category',
-                    text: ' successfully change your category!',
-                    icon: 'success'
-                    // text: data.message,
-                })
-                setCategory(data.payload)
-            }
-        })
+        e.preventDefault();
+        const isFilter = categoryfilterHelper(category, categoryId, categoryName)
+        if (isFilter) {
+            Swal.fire({
+                title: 'Category already exist!',
+                text: 'duplicate!',
+                icon: 'error'
+            })
+        } else {
+            let info = new FormData();
+            info.append('name', categoryName);
+            info.append('categoryImage', categoryImage);
+            editCategory({ categoryId, info, token }, (error, data) => {
+                if (error) console.log('fetching error', error)
+                else {
+                    Swal.fire({
+                        title: 'Edit Category',
+                        text: ' successfully change your category!',
+                        icon: 'success'
+                    })
+                    setIsOpen(false)
+                    setCategory(data.payload)
+                }
+            })
+        }
+
     }
     const handleNewCategory = () => {
+        openModal1()
         setCategoryName('')
         setCategoryImage(null)
         setCategoryId('')
     }
     const AddNewCategory = (e) => {
         e.preventDefault()
-        let info = new FormData();
-        info.append('name', categoryName);
-        info.append('categoryImage', categoryImage);
-        addNewCategory({ info, token }, (error, data) => {
-            if (error) console.log('fetching error', error)
-            else {
-                const modals = document.getElementById('NewModal')
-                const modalBackdrops = document.getElementsByClassName('modal-backdrop');
-                modals.classList.remove('show')
-                document.body.removeChild(modalBackdrops[1]);
-                setCategory(data.payload)
-                if (data.success) {
-                    Swal.fire({
-                        title: 'Add New Category',
-                        text: ' successfully Added!',
-                        // text: data.message,
-                        icon: 'success',
-                    })
-                    setCategoryName('')
-                    setCategoryImage(null)
-                    setCategoryId('')
+        const isFilter = categoryfilterHelper(category, categoryId, categoryName)
+        if (isFilter) {
+            Swal.fire({
+                title: ' Category  already exist!',
+                text: 'duplicate!',
+                icon: 'error'
+            })
+        } else {
+            let info = new FormData();
+            info.append('name', categoryName);
+            info.append('categoryImage', categoryImage);
+            addNewCategory({ info, token }, (error, data) => {
+                if (error) console.log('fetching error', error)
+                else {
+                    setCategory(data.payload.reverse())
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Add New Category',
+                            text: ' successfully Added!',
+                            icon: 'success',
+                        })
+                        setIsOpen1(false)
+                        setCategoryName('')
+                        setCategoryImage(null)
+                        setCategoryId('')
+                    }
                 }
-            }
-        })
+            })
+        }
 
     }
 
@@ -113,7 +137,6 @@ const AdminCategoryTable = props => {
         c.delete = <button className="btn btn-danger py-3 px-5" onClick={() => handleDeleteCategory(i)} style={{ fontSize: 15 }}><span><i className="fa fa-trash">Delete</i></span></button>
         return [...r, c]
     }, [])
-
 
     const TableData = {
         columns: [
@@ -143,7 +166,6 @@ const AdminCategoryTable = props => {
         rows: dataRow
     };
 
-
     return (
         <div className="container" style={{ fontSize: 16 }}>
             <div className="p-4 text-center text-dark font-weight-bold" style={{ fontSize: '2rem' }}>
@@ -151,7 +173,6 @@ const AdminCategoryTable = props => {
             </div>
             <div className="d-flex justify-content-end">
                 <button type="button"
-                    data-toggle="modal" data-target="#NewModal"
                     className="btn btn-outline-success "
                     style={{ width: 100, height: 30, fontSize: '1.5rem', }}
                     onClick={handleNewCategory}
@@ -162,64 +183,99 @@ const AdminCategoryTable = props => {
 
             <KmDataTable data={TableData} />
 
-
-            <form className="modal fade" id="updateModal" onSubmit={(e) => updateCategory(e)}>
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h4 className="modal-title">{"EDIT CATEGORY"}</h4>
-                            <button type="button" className="close" data-dismiss="modal">×</button>
-                        </div>
-                        <div className="modal-body">
-                            <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Category" onChange={(e) => setCategoryName(e.currentTarget.value)} value={categoryName} />
-                        </div>
-                        <div className="modal-body row px-3 m-0" style={{ height: 100 }}>
-                            <input type="file" name="categoryImage" onChange={e => setCategoryImage(e.target.files[0])}
-                                style={{ height: 40, fontSize: '1.5rem' }} className="form-control col-6"
-                                accept=".jpg,.JPEG,.png,.PNG,.gif,.GIF,.tiff,.TIFF"
-                            />
-                        </div>
-                        <div className="modal-footer py-4">
-                            <button className="btn btn-primary py-2 px-4" style={{ fontSize: 14 }} > <span><i className="fa fa-edit"></i></span>Save</button>
-                            <button className="btn btn-warning py-2 px-4" data-dismiss="modal" style={{ fontSize: 14 }}>Cancel</button>
-                        </div>
-                    </div>
+            <KmModal isOpen={isOpen}>
+                <div className="d-flex justify-content-between py-2">
+                    <h4 >{"EDIT CATEGORY"}</h4>
+                    <button className='btn' onClick={closeModal}><i className="fa fa-times" /></button>
                 </div>
-            </form>
+                <div className="py-2">
+                    <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Category" onChange={(e) => setCategoryName(e.currentTarget.value)} value={categoryName} required />
+                </div>
+                <div className="py-2" >
+                    <img src={`${IMG_SERVER}/${categoryImage}`} className="img-thumbnail w-100" />
+                    <label htmlFor="upload-photo" style={fileStyle}>Upload Image</label>
+                    <input type="file" name="photo"
+                        id="upload-photo"
+                        style={photoStyle}
+                        onChange={e => setCategoryImage(e.target.files[0])}
+                        accept="image/*"
+                    />
+                </div>
+                <div className="py-2 d-flex justify-content-end">
+                    <button className="btn btn-primary py-2 px-4 mr-2" style={{ fontSize: 14 }} onClick={e => updateCategory(e)}>
+                        <span><i className="fa fa-edit"></i></span>Save
+                        </button>
+                    <button className="btn btn-warning py-2 px-4" style={{ fontSize: 14 }} onClick={closeModal}>Cancel</button>
+                </div>
+            </KmModal>
             {/* ============================================================================================================================== */}
             {/* insert modal category */}
-            <form className="modal fade" id="NewModal" onSubmit={e => AddNewCategory(e)}>
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h4 className="modal-title">{"ADD NEW CATEGORY"}</h4>
-                            <button type="button" className="close" data-dismiss="modal">×</button>
-                        </div>
-                        <div className="modal-body">
-                            <input className="form-control"
-                                style={{ height: 40, fontSize: '1.5rem' }}
-                                type="text" placeholder="Add New Category"
-                                onChange={(e) => setCategoryName(e.currentTarget.value)}
-                                value={categoryName}
-                                required
-                            />
-                        </div>
-                        <div className="modal-body row px-3 m-0" style={{ height: 100 }}>
-                            <input type="file" name="categoryImage" onChange={e => setCategoryImage(e.target.files[0])}
-                                style={{ height: 40, fontSize: '1.5rem' }} className="form-control col-6"
-                                accept=".jpg,.JPEG,.png,.PNG,.gif,.GIF,.tiff,.TIFF"
-                                required
-                            />
-                        </div>
-                        <div className="modal-footer py-4">
-                            <button className="btn btn-primary py-2 px-4" style={{ fontSize: 14 }} > <span><i className="fa fa-edit"></i></span>Save</button>
-                            <button className="btn btn-warning py-2 px-4" data-dismiss="modal" style={{ fontSize: 14 }}>Cancel</button>
-                        </div>
+            <KmModal isOpen={isOpen1}>
+                <form onSubmit={e => AddNewCategory(e)}>
+                    <div className="d-flex justify-content-between py-2">
+                        <h4 >{"ADD NEW CATEGORY"}</h4>
+                        <button className='btn' onClick={closeModal1}><i className="fa fa-times" /></button>
                     </div>
-                </div>
-            </form>
+
+                    <div className="py-2">
+                        <input className="form-control"
+                            style={{ height: 40, fontSize: '1.5rem' }}
+                            type="text" placeholder="Category"
+                            onChange={(e) => setCategoryName(e.currentTarget.value)}
+                            value={categoryName}
+                            required
+                        />
+                    </div>
+                    <div className="py-2" style={{ height: 100 }}>
+                        {/* <img src={`${IMG_SERVER}/${categoryImage}`} className="img-thumbnail w-100"  /> */}
+                        <label htmlFor="upload-photo" style={fileStyle}>Upload Image</label>
+                        <input type="file" name="photo"
+                            id="upload-photo"
+                            style={photoStyle}
+                            onChange={e => setCategoryImage(e.target.files[0])}
+                            accept="image/*"
+                            required
+                        />
+                        {categoryImage !== null && <img src={`${IMG_SERVER}/${categoryImage}`} className="img-thumbnail w-100" />}
+                        {/* <input type="file"
+                            name="categoryImage" onChange={e => setCategoryImage(e.target.files[0])}
+                            style={{ height: 40, fontSize: '1.5rem' }} className="form-control"
+                            accept=".jpg,.JPEG,.png,.PNG,.gif,.GIF,.tiff,.TIFF"
+                            required
+                        /> */}
+                    </div>
+                    <div className="py-2 d-flex justify-content-end">
+                        <button type="submit" className="btn btn-primary py-2 px-4 mr-2" style={{ fontSize: 14 }} >
+                            <span><i className="fa fa-edit"></i></span>Save
+                        </button>
+                        <button className="btn btn-warning py-2 px-4" style={{ fontSize: 14 }} onClick={closeModal1}>Cancel</button>
+                    </div>
+                </form>
+            </KmModal>
+
         </div >
     )
 }
 
 export default withMedia(AdminCategoryTable)
+
+const fileStyle = {
+    display: "flex",
+    background: '#da3b4a',
+    color: 'white',
+    width: '100%',
+    height: '40px',
+    // padding: '9px 0px',
+    // textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '5px',
+    marginTop: '11px',
+    cursor: 'pointer',
+
+}
+const photoStyle = {
+    opacity: 0,
+    position: 'absolute',
+    zIndex: -1,
+}
