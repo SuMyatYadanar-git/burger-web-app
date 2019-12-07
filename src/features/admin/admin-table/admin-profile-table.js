@@ -21,6 +21,7 @@ const AdminProfileTable = props => {
     const [isOpen1, setIsOpen1] = useState(false)
     const formRef = useRef(null)
     const formRefUpdate = useRef(null)
+    const [index, setIndex] = useState(-1)
 
     const token = JSON.parse(localStorage.getItem('data')).token;
 
@@ -54,6 +55,7 @@ const AdminProfileTable = props => {
     const handleEditProfile = (index) => {
         openModal();
         const rowData = profile[index]
+        setIndex(index)
         setId(rowData.id)
         setName(rowData.name)
         setAddress(rowData.address)
@@ -279,13 +281,20 @@ const AdminProfileTable = props => {
                         />
                     </div>
                     <div className="py-2" >
-                        <img src={`${IMG_SERVER}/${image}`} className="img-thumbnail w-100" />
+                        {
+                            image === null || image === undefined
+                                ? <img src={`${IMG_SERVER}/${index === -1 ? image : profile[index].img}`} className="img-thumbnail w-100" />
+                                : typeof image === 'string'
+                                    ? <img src={`${IMG_SERVER}/${image}`} className="img-thumbnail w-100" />
+                                    : <img src={URL.createObjectURL(image)} className="img-thumbnail w-100" />
+                        }
                         <label htmlFor="upload-photo" style={fileStyle}>Upload Image</label>
                         <input type="file" name="photo"
                             id="upload-photo"
                             style={photoStyle}
                             onChange={e => setImage(e.target.files[0])}
                             accept="image/*"
+                            required
                         />
                     </div>
                     <div className="py-2 d-flex justify-content-end">
@@ -321,7 +330,7 @@ const AdminProfileTable = props => {
                             type="text" placeholder="Address"
                             onChange={(e) => setAddress(e.currentTarget.value)}
                             value={address}
-                            autofocus
+                            autoFocus={true}
                             required
                         />
                     </div>
@@ -356,8 +365,13 @@ const AdminProfileTable = props => {
                             accept="image/*"
                             required
                         />
-                        {image !== null && <img src={`${IMG_SERVER}/${image}`} className="img-thumbnail w-100" />}
-
+                        {
+                            image === null || image === undefined
+                                ? <img src={'images/emptyImage.png'} className="img-thumbnail w-100" />
+                                : typeof image === 'string'
+                                    ? <img src={`/${IMG_SERVER}/${image}`} className="img-thumbnail w-100" />
+                                    : <img src={URL.createObjectURL(image)} className="img-thumbnail w-100" />
+                        }
                     </div>
                     <div className="py-2 d-flex justify-content-end">
                         <button className="btn btn-primary py-2 px-4 mr-2" style={{ fontSize: 14 }} onClick={validate}>
@@ -375,16 +389,19 @@ const AdminProfileTable = props => {
 export default withMedia(AdminProfileTable)
 
 const fileStyle = {
-    display: "block",
+    display: "flex",
     background: '#da3b4a',
     color: 'white',
-    width: '210px',
+    width: '100%',
     height: '40px',
-    padding: '9px 0px',
-    textAlign: 'center',
+    // padding: '9px 0px',
+    // textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: '5px',
     marginTop: '11px',
     cursor: 'pointer',
+
 }
 const photoStyle = {
     opacity: 0,

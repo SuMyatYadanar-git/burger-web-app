@@ -14,7 +14,7 @@ const KmModal = props => {
             marginRight: '-50%',
             transform: 'translate(-50%, -50%)',
             borderRadius:'2rem ',
-            maxWidth: 400,
+            width: 400,
         }
     };
     Modal.setAppElement('#root')

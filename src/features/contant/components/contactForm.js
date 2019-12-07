@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { withMedia } from 'react-media-query-hoc'
 import Swal from 'sweetalert2'
 
@@ -10,6 +10,10 @@ const CommentForm = (props) => {
     const [name, setName] = useState('')
     const [mail, setMail] = useState('')
     const [message, setMessage] = useState('')
+    const formRef = useRef(null)
+    const userNameInput = useRef('')
+
+    const validate = () => formRef.current.reportValidity();
 
     const _onSendMail = (e) => {
         e.preventDefault()
@@ -17,6 +21,7 @@ const CommentForm = (props) => {
         mailSender({ info }, (error, data) => {
             if (error != null) {
                 console.error("fetching error", error)
+                userNameInput.current.focus();
                 Swal.fire({
                     title: "Your operation failed",
                     text: 'please try again!',
@@ -29,7 +34,6 @@ const CommentForm = (props) => {
                     Swal.fire({
                         title: 'Your Email Sent Successfully',
                         text: ' thanks for messaging to us!',
-                        // text: data.message,
                         icon: 'success',
                     })
                     setName('')
@@ -46,19 +50,19 @@ const CommentForm = (props) => {
             <div className='col-lg-6' style={{ fontSize: media.desktop ? 30 : media.tablet ? 20 : 18, fontFamily: 'Volkhov' }}>
                 <span className="font-weight-bold" style={{ fontSize: 30 }}>Get In Touch</span>
                 <p style={{ fontSize: media.desktop ? 16 : media.tablet ? 14 : 12 }} className='pb-5'>Lorem ipsum dolor sit amet, consectetuer adipis cing elit, sed diam nonummy summiel nibh</p>
-                <form onSubmit={(e) => _onSendMail(e)}>
+                <form ref={formRef} onSubmit={(e) => _onSendMail(e)}>
                     <input
                         type="text"
-                        // pattern="^[0]{1}[9]{1}[0-9]{9}$"
+                        ref={userNameInput}
                         className='form-control mb-4 '
                         style={{ fontSize: 14, border: `1px solid ${Colors.Price}`, height: '40px' }}
                         placeholder={'Name'}
                         aria-describedby="addon-wrapping"
                         onChange={e => setName(e.target.value)}
                         value={name}
+                        autoFocus={true}
                         required
                     />
-
                     <input
                         type="email"
                         className='form-control mb-4 '
@@ -69,11 +73,6 @@ const CommentForm = (props) => {
                         pattern="[A-Za-z0-9._%+-]{3,}@[a-zA-Z]{3,}([.]{1}[a-zA-Z]{2,}|[.]{1}[a-zA-Z]{2,}[.]{1}[a-zA-Z]{2,})"
                         required
                     />
-
-                    {/* <div class="form-group">
-    <label for="exampleFormControlTextarea1">Example textarea</label>
-    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-  </div> */}
                     <textarea
                         className='form-control mb-4'
                         rows="3"
@@ -87,6 +86,7 @@ const CommentForm = (props) => {
                     <button className='btn btn-warning w-100 text-light mb-4'
                         type="submit"
                         style={{ fontSize: '16px' }}
+                        onClick={validate}
                     >
                         SEND
                         </button>

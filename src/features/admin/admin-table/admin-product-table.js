@@ -19,6 +19,7 @@ const AdminProductTable = props => {
     const [description, setDescription] = useState('')
     const [isOpen, setIsOpen] = useState(false)
     const [isOpen1, setIsOpen1] = useState(false)
+    const [index, setIndex] = useState(-1)
 
     const token = JSON.parse(localStorage.getItem('data')).token;
 
@@ -45,6 +46,7 @@ const AdminProductTable = props => {
     const handleEditProduct = (index) => {
         openModal()
         const rowData = products[index]
+        setIndex(index)
         setId(rowData.p_id)
         setproductImage(rowData.p_img)
         setproductName(rowData.p_name)
@@ -163,7 +165,7 @@ const AdminProductTable = props => {
                 width: 270
             },
             {
-                label: 'price',
+                label: 'Price',
                 field: 'p_price',
                 sort: 'asc',
                 width: 270
@@ -246,14 +248,22 @@ const AdminProductTable = props => {
                     />
                 </div>
                 <div className="py-1">
-                    <img src={`${IMG_SERVER}/${productImage}`} className="img-thumbnail w-100" />
+                {
+                        productImage === null || productImage === undefined
+                            ? <img src={`${IMG_SERVER}/${index === -1 ? productImage : products[index].p_img}`} className="img-thumbnail w-100" />
+                            : typeof productImage === 'string'
+                                ? <img src={`${IMG_SERVER}/${productImage}`} className="img-thumbnail w-100" />
+                                : <img src={URL.createObjectURL(productImage)} className="img-thumbnail w-100" />
+                    }
                     <label htmlFor="upload-photo" style={fileStyle}>Upload Image</label>
                     <input type="file" name="photo"
                         id="upload-photo"
                         style={photoStyle}
                         onChange={e => setproductImage(e.target.files[0])}
                         accept="image/*"
+                        required
                     />
+                     
                 </div>
                 <div className="py-2 d-flex justify-content-end">
                     <button className="btn btn-primary py-2 px-4 mr-2" style={{ fontSize: 14 }} onClick={e => updateProduct(e)}>
@@ -282,7 +292,7 @@ const AdminProductTable = props => {
                     <div className="py-2" >
                         <input className="form-control"
                             style={{ height: 40, fontSize: '1.5rem' }}
-                            type="text" placeholder="Price"
+                            type="number" placeholder="Price"
                             onChange={(e) => setproductPrice(e.currentTarget.value)}
                             value={productPrice}
                             required
@@ -308,7 +318,14 @@ const AdminProductTable = props => {
                             onChange={e => setproductImage(e.target.files[0])}
                             accept="image/*"
                         />
-                        {productImage !== null && <img src={`${IMG_SERVER}/${productImage}`} className="img-thumbnail w-100" />}
+                        {
+                            productImage === null || productImage === undefined
+                                ? <img src={'images/emptyImage.png'} className="img-thumbnail w-100" />
+                                : typeof productImage === 'string'
+                                    ? <img src={`${IMG_SERVER}/${productImage}`} className="img-thumbnail w-100" />
+                                    : <img src={URL.createObjectURL(productImage)} className="img-thumbnail w-100" />
+                        }
+
                     </div>
                     <div className="py-2 d-flex justify-content-end">
                         <button type="submit" className="btn btn-primary py-2 px-4 mr-2" style={{ fontSize: 14 }} >
@@ -327,19 +344,23 @@ const AdminProductTable = props => {
 export default withMedia(AdminProductTable);
 
 const fileStyle = {
-    display: "block",
+    display: "flex",
     background: '#da3b4a',
     color: 'white',
-    width: '210px',
+    width: '100%',
     height: '40px',
-    padding: '9px 0px',
-    textAlign: 'center',
+    // padding: '9px 0px',
+    // textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: '5px',
     marginTop: '11px',
     cursor: 'pointer',
+
 }
 const photoStyle = {
     opacity: 0,
     position: 'absolute',
     zIndex: -1,
 }
+

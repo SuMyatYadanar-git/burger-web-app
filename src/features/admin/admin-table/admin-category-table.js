@@ -14,6 +14,7 @@ const AdminCategoryTable = props => {
     const [categoryId, setCategoryId] = useState('')
     const [isOpen, setIsOpen] = useState(false)
     const [isOpen1, setIsOpen1] = useState(false)
+    const [index, setIndex] = useState(-1)
 
     // let fileUpload = null
     const { media } = props
@@ -58,6 +59,7 @@ const AdminCategoryTable = props => {
     const handleEditCategory = (index) => {
         openModal();
         const rowData = category[index]
+        setIndex(index)
         setCategoryName(rowData.c_name)
         setCategoryImage(rowData.c_img)
         setCategoryId(rowData.c_id)
@@ -192,13 +194,26 @@ const AdminCategoryTable = props => {
                     <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Category" onChange={(e) => setCategoryName(e.currentTarget.value)} value={categoryName} required />
                 </div>
                 <div className="py-2" >
-                    <img src={`${IMG_SERVER}/${categoryImage}`} className="img-thumbnail w-100" />
+                    {
+                        // categoryImage === null ?
+                        //     <img src={`${IMG_SERVER}/${categoryImage}`} className="img-thumbnail w-100" /> :
+                        //     typeof categoryImage === "string" ?
+                        //         <img src={`${IMG_SERVER}/${categoryImage}`} className="img-thumbnail w-100" />
+                        //         :
+                        //         <img src={URL.createObjectURL(categoryImage)} className="img-thumbnail w-100" />
+                        categoryImage === null || categoryImage === undefined
+                            ? <img src={`${IMG_SERVER}/${index === -1 ? categoryImage : category[index].c_img}`} className="img-thumbnail w-100" />
+                            : typeof categoryImage === 'string'
+                                ? <img src={`${IMG_SERVER}/${categoryImage}`} className="img-thumbnail w-100" />
+                                : <img src={URL.createObjectURL(categoryImage)} className="img-thumbnail w-100" />
+                    }
                     <label htmlFor="upload-photo" style={fileStyle}>Upload Image</label>
                     <input type="file" name="photo"
                         id="upload-photo"
                         style={photoStyle}
                         onChange={e => setCategoryImage(e.target.files[0])}
                         accept="image/*"
+                        required
                     />
                 </div>
                 <div className="py-2 d-flex justify-content-end">
@@ -226,8 +241,7 @@ const AdminCategoryTable = props => {
                             required
                         />
                     </div>
-                    <div className="py-2" style={{ height: 100 }}>
-                        {/* <img src={`${IMG_SERVER}/${categoryImage}`} className="img-thumbnail w-100"  /> */}
+                    <div className="py-2" >
                         <label htmlFor="upload-photo" style={fileStyle}>Upload Image</label>
                         <input type="file" name="photo"
                             id="upload-photo"
@@ -236,13 +250,24 @@ const AdminCategoryTable = props => {
                             accept="image/*"
                             required
                         />
-                        {categoryImage !== null && <img src={`${IMG_SERVER}/${categoryImage}`} className="img-thumbnail w-100" />}
-                        {/* <input type="file"
-                            name="categoryImage" onChange={e => setCategoryImage(e.target.files[0])}
-                            style={{ height: 40, fontSize: '1.5rem' }} className="form-control"
-                            accept=".jpg,.JPEG,.png,.PNG,.gif,.GIF,.tiff,.TIFF"
-                            required
-                        /> */}
+                        {
+                            // categoryImage === null || categoryImage === undefined
+                            //     ?
+                            //     <img src={'images/emptyImage.png'} className="img-thumbnail w-100" />
+                            //     :
+                            // typeof categoryImage === "string"
+                            //     ?
+                            //     <img src={`${IMG_SERVER}/${categoryImage}`} className="img-thumbnail w-100" />
+                            //     : typeof categoryImage === "object"
+                            //         ? <img src={URL.createObjectURL(categoryImage)} className="img-thumbnail w-100" />
+                            //         :
+                            categoryImage === null || categoryImage === undefined
+                                ? <img src={'images/emptyImage.png'} className="img-thumbnail w-100" />
+                                : typeof categoryImage === 'string'
+                                    ? <img src={`${IMG_SERVER}/${categoryImage}`} className="img-thumbnail w-100" />
+                                    : <img src={URL.createObjectURL(categoryImage)} className="img-thumbnail w-100" />
+
+                        }
                     </div>
                     <div className="py-2 d-flex justify-content-end">
                         <button type="submit" className="btn btn-primary py-2 px-4 mr-2" style={{ fontSize: 14 }} >
