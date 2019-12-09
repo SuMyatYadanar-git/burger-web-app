@@ -22,7 +22,12 @@ const AdminProfileTable = props => {
     const formRef = useRef(null)
     const formRefUpdate = useRef(null)
     const [index, setIndex] = useState(-1)
+    const profileNameInput = useRef('')
 
+    if (JSON.parse(localStorage.getItem('data')) === null) {
+        props.history.replace('/')
+    }
+    
     const token = JSON.parse(localStorage.getItem('data')).token;
 
     useEffect(() => {
@@ -69,6 +74,7 @@ const AdminProfileTable = props => {
 
         const isFilter = profilefilterHelper(profile, id, name)
         if (isFilter) {
+            profileNameInput.current.focus()
             Swal.fire({
                 title: 'Profile Name already exist!',
                 text: 'duplicate!',
@@ -241,11 +247,12 @@ const AdminProfileTable = props => {
                     </div>
                     <div className="py-2">
                         <input className="form-control"
-                            // ref={userNameInput}
+                            ref={profileNameInput}
                             style={{ height: 40, fontSize: '1.5rem' }}
                             type="text" placeholder="Name"
                             onChange={(e) => setName(e.currentTarget.value)}
                             value={name}
+                            autoFocus={true}
                         />
                     </div>
                     <div className="py-2" >
@@ -294,7 +301,7 @@ const AdminProfileTable = props => {
                             style={photoStyle}
                             onChange={e => setImage(e.target.files[0])}
                             accept="image/*"
-                            required
+
                         />
                     </div>
                     <div className="py-2 d-flex justify-content-end">
@@ -321,6 +328,8 @@ const AdminProfileTable = props => {
                             type="text" placeholder="Name"
                             onChange={(e) => setName(e.currentTarget.value)}
                             value={name}
+                            ref={profileNameInput}
+                            autoFocus={true}
                             required
                         />
                     </div>
@@ -330,7 +339,6 @@ const AdminProfileTable = props => {
                             type="text" placeholder="Address"
                             onChange={(e) => setAddress(e.currentTarget.value)}
                             value={address}
-                            autoFocus={true}
                             required
                         />
                     </div>

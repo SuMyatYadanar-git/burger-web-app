@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { withMedia } from 'react-media-query-hoc'
 import Swal from 'sweetalert2'
 
@@ -20,7 +20,11 @@ const AdminProductTable = props => {
     const [isOpen, setIsOpen] = useState(false)
     const [isOpen1, setIsOpen1] = useState(false)
     const [index, setIndex] = useState(-1)
+    const productNameInput = useRef()
 
+    if (JSON.parse(localStorage.getItem('data')) === null ) {
+        props.history.replace('/')
+    }
     const token = JSON.parse(localStorage.getItem('data')).token;
 
     useEffect(() => {
@@ -57,6 +61,7 @@ const AdminProductTable = props => {
         e.preventDefault()
         const isFilter = productfilterHelper(products, id, productName, productPrice, description, productImage)
         if (isFilter) {
+            productNameInput.current.focus();
             Swal.fire({
                 title: 'Product Name already exist!',
                 text: 'duplicate!',
@@ -97,6 +102,7 @@ const AdminProductTable = props => {
         e.preventDefault()
         const isFilter = productfilterHelper(products, id, productName, productPrice, description, productImage)
         if (isFilter) {
+            productNameInput.current.focus();
             Swal.fire({
                 title: ' Product Name already exist!',
                 text: 'duplicate!',
@@ -226,6 +232,8 @@ const AdminProductTable = props => {
                         type="text" placeholder="Name"
                         onChange={(e) => setproductName(e.currentTarget.value)}
                         value={productName}
+                        ref={productNameInput}
+                        autoFocus={true}
                     />
                 </div>
                 <div className="py-2" >
@@ -248,7 +256,7 @@ const AdminProductTable = props => {
                     />
                 </div>
                 <div className="py-1">
-                {
+                    {
                         productImage === null || productImage === undefined
                             ? <img src={`${IMG_SERVER}/${index === -1 ? productImage : products[index].p_img}`} className="img-thumbnail w-100" />
                             : typeof productImage === 'string'
@@ -261,9 +269,9 @@ const AdminProductTable = props => {
                         style={photoStyle}
                         onChange={e => setproductImage(e.target.files[0])}
                         accept="image/*"
-                        required
+
                     />
-                     
+
                 </div>
                 <div className="py-2 d-flex justify-content-end">
                     <button className="btn btn-primary py-2 px-4 mr-2" style={{ fontSize: 14 }} onClick={e => updateProduct(e)}>
@@ -286,6 +294,8 @@ const AdminProductTable = props => {
                             type="text" placeholder="Name"
                             onChange={(e) => setproductName(e.currentTarget.value)}
                             value={productName}
+                            ref={productNameInput}
+                            autoFocus={true}
                             required
                         />
                     </div>
@@ -325,7 +335,6 @@ const AdminProductTable = props => {
                                     ? <img src={`${IMG_SERVER}/${productImage}`} className="img-thumbnail w-100" />
                                     : <img src={URL.createObjectURL(productImage)} className="img-thumbnail w-100" />
                         }
-
                     </div>
                     <div className="py-2 d-flex justify-content-end">
                         <button type="submit" className="btn btn-primary py-2 px-4 mr-2" style={{ fontSize: 14 }} >

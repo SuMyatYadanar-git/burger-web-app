@@ -19,30 +19,11 @@ export const getAllProfile = (callback) => {
         .catch(error => callback(null, error))
 }
 
-export const addNewProfile =({info,token},callback)=>{
-    fetch(API_URL + `/profile`,{
-      method:'POST',
-      headers:{
-            "Authorization": 'Bearer ' + token, 
-      },
-      cache:'no-cache',
-      body:info
-    })
-    .then(res=>{
-        if(res.status !== 200) throw res.json()
-        else return res.json()
-    })
-    .then(data => {
-        callback(null, data)
-    })
-    .catch(error => callback(null, error))
-}
-
-export const editProfile = ({ id, info,token }, callback) => {    
-    fetch(API_URL + `/profile/${id}`, {
-        method: 'PUT',
+export const addNewProfile = ({ info, token }, callback) => {
+    fetch(API_URL + `/profile`, {
+        method: 'POST',
         headers: {
-             "Authorization": 'Bearer ' + token,           
+            "Authorization": 'Bearer ' + token,
         },
         cache: 'no-cache',
         body: info
@@ -51,17 +32,54 @@ export const editProfile = ({ id, info,token }, callback) => {
             if (res.status !== 200) throw res.json()
             else return res.json()
         })
-        .then(data => {                   
+        .then(data => {
             callback(null, data)
         })
         .catch(error => callback(null, error))
 }
 
-export const deleteAllProfile = (id,token, callback) => {
+export const editProfile = ({ id, info, token }, callback) => {
     fetch(API_URL + `/profile/${id}`, {
-        method: 'DELETE',
+        method: 'PUT',
         headers: {
-             "Authorization": 'Bearer ' + token,
+            "Authorization": 'Bearer ' + token,
+        },
+        cache: 'no-cache',
+        body: info
+    })
+        .then(res => {
+            if (res.status !== 200) throw res.json()
+            else return res.json()
+        })
+        .then(data => {
+            callback(null, data)
+        })
+        .catch(error => callback(null, error))
+}
+
+// export const deleteAllProfile = (id,token, callback) => {
+//     fetch(API_URL + `/profile/${id}`, {
+//         method: 'DELETE',
+//         headers: {
+//              "Authorization": 'Bearer ' + token,
+//             "Content-Type": "application/json"
+//         },
+//         cache: 'no-cache'
+//     })
+//         .then(res => {
+//             if (res.status !== 200) throw res.json()
+//             else return res.json()
+//         })
+//         .then(data => {
+//             callback(null, data)
+//         })
+//         .catch(error => callback(null, error))
+// }
+export const deleteAllProfile = (id, token, callback) => {
+    fetch(API_URL + `/profile/delete-profile/${id}`, {
+        method: 'PATCH',
+        headers: {
+            "Authorization": 'Bearer ' + token,
             "Content-Type": "application/json"
         },
         cache: 'no-cache'

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { withRouter, Route, Switch, Redirect } from 'react-router-dom'
 
 import HomeContainer from './features/home/container/HomeContainer'
@@ -13,19 +13,17 @@ import Footer from './features/app/footer'
 import ToTop from './features/app/toTopButton'
 
 import LoginContainer from './features/admin/login/loginContainer'
-// import adminHomeContainer from './features/admin/admin-home/adminHomeContainer'
 import adminCategoryTable from './features/admin/admin-table/admin-category-table'
 import adminProductTable from './features/admin/admin-table/admin-product-table'
 import AdminProfileTable from './features/admin/admin-table/admin-profile-table'
 import AdminNavbar from './features/admin/admin-home/components/adminNavbar'
 import AdminUserSetting from './features/admin/admin-table/admin-user-setting'
-// import BurgerImage from './Images/burgerBackground/bg1.jpg'
 
 const AppRoute = props => {
     const { history } = props
     // const [name, setName] = useState(JSON.parse(localStorage.getItem('data')) === null ? '' : JSON.parse(localStorage.getItem('data')).payload[0].user_name)
     const routeName = ['/admin', '/admin-category', '/admin-product', '/admin-profile', '/user']
-    const routeAdminName = ['/', '/burger', '/about', '/map', '/burgerInfo', '/contant', '/admin']   
+    const routeAdminName = ['/', '/burger', '/about', '/map', '/burgerInfo', '/contant', '/admin']
 
     return (
         <div>
@@ -43,7 +41,6 @@ const AppRoute = props => {
                 <Route path={`/${route.adminProducts}`} component={adminProductTable} />
                 <Route path={`/${route.adminCategory}`} component={adminCategoryTable} />
                 <Route path={`${route.home}`} exact component={HomeContainer} />
-                {/* <Route path={`/${route.adminHome}`} component={adminHomeContainer} /> */}
                 <Route path='/user' component={AdminUserSetting} />
                 <Redirect to={`${route.home}`} />
             </Switch>

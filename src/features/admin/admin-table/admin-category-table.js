@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { withMedia } from 'react-media-query-hoc'
 import Swal from 'sweetalert2'
 import { getAllCategory, deleteAllCategory, editCategory, addNewCategory } from '../../../network/categoryFetcher'
@@ -15,9 +15,13 @@ const AdminCategoryTable = props => {
     const [isOpen, setIsOpen] = useState(false)
     const [isOpen1, setIsOpen1] = useState(false)
     const [index, setIndex] = useState(-1)
+    const userNameInput = useRef('')
 
     // let fileUpload = null
     const { media } = props
+    if (JSON.parse(localStorage.getItem('data')) === null) {
+        props.history.replace('/')
+    }
     const token = JSON.parse(localStorage.getItem('data')).token;
 
     useEffect(() => {
@@ -69,6 +73,7 @@ const AdminCategoryTable = props => {
         e.preventDefault();
         const isFilter = categoryfilterHelper(category, categoryId, categoryName)
         if (isFilter) {
+            userNameInput.current.focus();
             Swal.fire({
                 title: 'Category already exist!',
                 text: 'duplicate!',
@@ -191,7 +196,14 @@ const AdminCategoryTable = props => {
                     <button className='btn' onClick={closeModal}><i className="fa fa-times" /></button>
                 </div>
                 <div className="py-2">
-                    <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }} type="text" placeholder="Category" onChange={(e) => setCategoryName(e.currentTarget.value)} value={categoryName} required />
+                    <input className="form-control" style={{ height: 40, fontSize: '1.5rem' }}
+                        type="text" placeholder="Category"
+                        onChange={(e) => setCategoryName(e.currentTarget.value)}
+                        value={categoryName}
+                        required
+                        ref={userNameInput}
+                        autoFocus={true}
+                    />
                 </div>
                 <div className="py-2" >
                     {
@@ -213,7 +225,6 @@ const AdminCategoryTable = props => {
                         style={photoStyle}
                         onChange={e => setCategoryImage(e.target.files[0])}
                         accept="image/*"
-                        required
                     />
                 </div>
                 <div className="py-2 d-flex justify-content-end">
@@ -239,6 +250,8 @@ const AdminCategoryTable = props => {
                             onChange={(e) => setCategoryName(e.currentTarget.value)}
                             value={categoryName}
                             required
+                            ref={userNameInput}
+                            autoFocus={true}
                         />
                     </div>
                     <div className="py-2" >

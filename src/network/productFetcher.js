@@ -17,31 +17,31 @@ export const getAllProduct = (callback) => {
         })
         .catch(error => callback(null, error))
 }
-export const addNewProduct =({info,token},callback)=>{
-    fetch(API_URL + `/product`,{
-      method:'POST',
-      headers:{
-            "Authorization": 'Bearer ' + token, 
-      },
-      cache:'no-cache',
-      body:info
+export const addNewProduct = ({ info, token }, callback) => {
+    fetch(API_URL + `/product`, {
+        method: 'POST',
+        headers: {
+            "Authorization": 'Bearer ' + token,
+        },
+        cache: 'no-cache',
+        body: info
     })
-    .then(res=>{
-        if(res.status !== 200) throw res.json()
-        else return res.json()
-    })
-    .then(data => {
-        callback(null, data)
-    })
-    .catch(error => callback(null, error))
+        .then(res => {
+            if (res.status !== 200) throw res.json()
+            else return res.json()
+        })
+        .then(data => {
+            callback(null, data)
+        })
+        .catch(error => callback(null, error))
 }
 
-export const editProduct = ({ id, info,token }, callback) => {
-    
+export const editProduct = ({ id, info, token }, callback) => {
+
     fetch(API_URL + `/product/${id}`, {
         method: 'PUT',
         headers: {
-               "Authorization": 'Bearer ' + token,
+            "Authorization": 'Bearer ' + token,
             // "Content-Type": "application/json"
         },
         cache: 'no-cache',
@@ -57,11 +57,29 @@ export const editProduct = ({ id, info,token }, callback) => {
         .catch(error => callback(null, error))
 }
 
-export const deleteAllProduct = (id,token, callback) => {
-    fetch(API_URL + `/product/${id}`, {
-        method: 'DELETE',
+// export const deleteAllProduct = (id,token, callback) => {
+//     fetch(API_URL + `/product/${id}`, {
+//         method: 'DELETE',
+//         headers: {
+//                "Authorization": 'Bearer ' + token,
+//             "Content-Type": "application/json"
+//         },
+//         cache: 'no-cache'
+//     })
+//         .then(res => {
+//             if (res.status !== 200) throw res.json()
+//             else return res.json()
+//         })
+//         .then(data => {
+//             callback(null, data)
+//         })
+//         .catch(error => callback(null, error))
+// }
+export const deleteAllProduct = (id, token, callback) => {
+    fetch(API_URL + `/product/delete-product/${id}`, {
+        method: 'PATCH',
         headers: {
-               "Authorization": 'Bearer ' + token,
+            "Authorization": 'Bearer ' + token,
             "Content-Type": "application/json"
         },
         cache: 'no-cache'

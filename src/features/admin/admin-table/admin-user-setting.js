@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Swal from 'sweetalert2'
 
 import { changePwd, changeUserName } from '../../../network/userFetcher'
@@ -11,7 +11,11 @@ const AdminUserSetting = props => {
         JSON.parse(localStorage.getItem('data')) === undefined ? '' :
             JSON.parse(localStorage.getItem('data')).payload[0].user_name
     )
+    const pwdFocus = useRef('')
 
+    if (JSON.parse(localStorage.getItem('data')) === null) {
+        props.history.replace('/')
+    }
 
     const userData = JSON.parse(localStorage.getItem('data'))
     // console.log(JSON.parse(localStorage.getItem('data')).payload[0].user_name)
@@ -25,18 +29,20 @@ const AdminUserSetting = props => {
 
     const _onChangePwd = (e) => {
         e.preventDefault()
-        Npwd.length < 3 && alert('password must be above 4character at least!')
+        Npwd.length < 3 && Swal.fire({
+            title: 'password must be above 4character at least!',
+            text: ' please set again!',
+            icon: 'error',
+        })
         if (Npwd === Cpwd) {
             const info = { Npwd, id, token }
             changePwd(info, (error, data) => {
                 if (error) console.log('fetching error', error)
                 else {
-                    // console.log(data)
                     if (data.success === true) {
                         Swal.fire({
                             title: 'Change Password',
                             text: ' update password successfully!',
-                            // text: data.message,
                             icon: 'success',
                         })
                         setNpwd('')
@@ -45,7 +51,12 @@ const AdminUserSetting = props => {
                 }
             })
         } else {
-            alert('new passwrod and confirm password must be the same!')
+            pwdFocus.current.focus()
+            Swal.fire({
+                title: 'new passwrod and confirm password must be the same!',
+                text: ' please set again!',
+                icon: 'error',
+            })
             console.log('db error')
         }
     }
@@ -56,11 +67,11 @@ const AdminUserSetting = props => {
         changeUserName({ info }, (error, data) => {
             if (error) console.log('fetching error', error)
             else {
-                Swal.fire({
-                    title: 'Change User Name',
-                    text: ' update name successfully!',
-                    icon: 'success',
-                })
+                // Swal.fire({
+                //     title: 'Change User Name',
+                //     text: ' update name successfully!',
+                //     icon: 'success',
+                // })
                 const userInfo = { ...JSON.parse(localStorage.getItem('data')), payload: data.payload }
                 localStorage.setItem('data', JSON.stringify(userInfo))
                 const updateName = data.payload === undefined ? 'admin' : data.payload[0].user_name
@@ -84,7 +95,10 @@ const AdminUserSetting = props => {
                         style={{ height: '3rem' }}
                         value={Npwd}
                         onChange={(e) => setNpwd(e.target.value)}
-                        required />
+                        required
+                        autoFocus={true}
+                        ref={pwdFocus}
+                    />
                 </div>
                 <div className="form-group d-flex justify-content-center">
                     <label className="col-lg-2" >Confirm Password</label>
@@ -116,6 +130,7 @@ const AdminUserSetting = props => {
                         style={{ height: '3rem', fontSize: '1.8rem' }}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        
                         required
                     />
                 </div>
@@ -140,13 +155,3 @@ const AdminUserSetting = props => {
     )
 }
 export default AdminUserSetting
-
-{/* <div className="form-group d-flex justify-content-center">
-                    <label className="col-lg-2" >Password</label>
-                    <input type="password"
-                        name="current-password"
-                        className="form-control col-lg-5"
-                        value={pwd}
-                        onChange={(e) => setPwd(e.target.value)}
-                        required />
-                </div> */}

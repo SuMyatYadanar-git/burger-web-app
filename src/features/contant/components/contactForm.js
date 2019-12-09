@@ -43,8 +43,6 @@ const CommentForm = (props) => {
             }
         })
     }
-
-
     return (
         <div className='row justify-content-center py-5' style={{ background: Colors.bgRed, color: 'white', }}>
             <div className='col-lg-6' style={{ fontSize: media.desktop ? 30 : media.tablet ? 20 : 18, fontFamily: 'Volkhov' }}>
