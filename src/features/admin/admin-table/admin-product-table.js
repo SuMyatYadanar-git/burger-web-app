@@ -22,15 +22,17 @@ const AdminProductTable = props => {
     const [index, setIndex] = useState(-1)
     const productNameInput = useRef()
 
-    if (JSON.parse(localStorage.getItem('data')) === null ) {
-        props.history.replace('/')
-    }
-    const token = JSON.parse(localStorage.getItem('data')).token;
+    // if (JSON.parse(localStorage.getItem('data')) === null ) {
+    //     props.history.replace('/')
+    //     return null;
+    // }
+    // const token = JSON.parse(localStorage.getItem('data')).token;
 
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('data'))
         if (userData === null) {
             props.history.replace('/')
+            return null;
         } else {
             getAllProduct((error, data) => {
                 if (error) console.log("fetch errror", error)
@@ -73,6 +75,7 @@ const AdminProductTable = props => {
             info.append('price', productPrice);
             info.append('description', description);
             info.append('productImage', productImage)
+            const token = JSON.parse(localStorage.getItem('data')).token;
             editProduct({ id, info, token }, (error, data) => {
                 if (error) console.log('fetching error', error)
                 else {
@@ -115,6 +118,7 @@ const AdminProductTable = props => {
             info.append('price', productPrice);
             info.append('description', description);
             info.append('productImage', productImage)
+            const token = JSON.parse(localStorage.getItem('data')).token;
             addNewProduct({ info, token }, (error, data) => {
                 if (error) console.log('fetching error', error)
                 else {
@@ -140,6 +144,7 @@ const AdminProductTable = props => {
     const deleteProduct = (index) => {
         const rowData = products[index]
         const id = rowData.p_id
+        const token = JSON.parse(localStorage.getItem('data')).token;
         deleteAllProduct(id, token, (error, data) => {
             if (error) console.log('fetching error', error)
             else {

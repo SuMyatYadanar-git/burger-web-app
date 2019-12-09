@@ -13,13 +13,7 @@ const AdminUserSetting = props => {
     )
     const pwdFocus = useRef('')
 
-    if (JSON.parse(localStorage.getItem('data')) === null) {
-        props.history.replace('/')
-    }
-
     const userData = JSON.parse(localStorage.getItem('data'))
-    // console.log(JSON.parse(localStorage.getItem('data')).payload[0].user_name)
-
     if (userData === null) {
         props.history.replace('/')
         return null;

@@ -19,15 +19,12 @@ const AdminCategoryTable = props => {
 
     // let fileUpload = null
     const { media } = props
-    if (JSON.parse(localStorage.getItem('data')) === null) {
-        props.history.replace('/')
-    }
-    const token = JSON.parse(localStorage.getItem('data')).token;
 
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('data'))
         if (userData === null) {
             props.history.replace('/')
+            return null;
         } else {
             getAllCategory((error, data) => {
                 if (error) console.error(error)
@@ -46,6 +43,7 @@ const AdminCategoryTable = props => {
     const handleDeleteCategory = (index) => {
         const rowData = category[index]
         const id = rowData.c_id
+        const token = JSON.parse(localStorage.getItem('data')).token;
         deleteAllCategory(id, token, (error, data) => {
             if (error) console.log('fetching error', error)
             else {
@@ -83,6 +81,7 @@ const AdminCategoryTable = props => {
             let info = new FormData();
             info.append('name', categoryName);
             info.append('categoryImage', categoryImage);
+            const token = JSON.parse(localStorage.getItem('data')).token;
             editCategory({ categoryId, info, token }, (error, data) => {
                 if (error) console.log('fetching error', error)
                 else {
@@ -117,6 +116,7 @@ const AdminCategoryTable = props => {
             let info = new FormData();
             info.append('name', categoryName);
             info.append('categoryImage', categoryImage);
+            const token = JSON.parse(localStorage.getItem('data')).token;
             addNewCategory({ info, token }, (error, data) => {
                 if (error) console.log('fetching error', error)
                 else {

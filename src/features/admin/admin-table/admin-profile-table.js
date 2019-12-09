@@ -24,16 +24,12 @@ const AdminProfileTable = props => {
     const [index, setIndex] = useState(-1)
     const profileNameInput = useRef('')
 
-    if (JSON.parse(localStorage.getItem('data')) === null) {
-        props.history.replace('/')
-    }
-    
-    const token = JSON.parse(localStorage.getItem('data')).token;
-
+   
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('data'))
         if (userData === null) {
             props.history.replace('/')
+            return null;
         } else {
             getAllProfile((error, data) => {
                 if (error) console.log('fetching error', error)
@@ -87,6 +83,7 @@ const AdminProfileTable = props => {
             info.append('mail', mail)
             info.append('phone', phone)
             info.append('profileImage', image)
+            const token = JSON.parse(localStorage.getItem('data')).token;
             editProfile({ id, info, token }, (error, data) => {
                 if (error) console.log('fetching error', error)
                 else {
@@ -128,6 +125,7 @@ const AdminProfileTable = props => {
             info.append('mail', mail)
             info.append('phone', phone)
             info.append('profileImage', image)
+            const token = JSON.parse(localStorage.getItem('data')).token;
             addNewProfile({ info, token }, (error, data) => {
                 if (error) console.log('fetching error', error)
                 else {
@@ -153,6 +151,7 @@ const AdminProfileTable = props => {
     const deletProfile = (index) => {
         const rowData = profile[index]
         const id = rowData.id
+        const token = JSON.parse(localStorage.getItem('data')).token;
         deleteAllProfile(id, token, (error, data) => {
             if (error) console.log('fetching error', error)
             else {

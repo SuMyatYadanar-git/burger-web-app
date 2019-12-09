@@ -20,7 +20,7 @@ const LoginContainer = props => {
             if (error) console.log(error)
             else if (data.success === true) {
                 localStorage.setItem('data', JSON.stringify(data))
-                props.history.replace(`/${route.adminProfile}`)
+                props.history.replace(`/${route.adminCategory}`)
             }
             else {
                 userNameInput.current.focus();

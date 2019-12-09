@@ -11,8 +11,10 @@ const AdminNavbar = props => {
 
     const _onClickLogout = () => {
         localStorage.removeItem('data');
-        // history.push(`/${route.admin}`)
-         history.replace(`/${route.admin}`)
+        window.location.href = `/${route.admin}`
+        // window.history.backward(0);
+        // history.replace(`/${route.admin}`)
+
     }
     const loginName = JSON.parse(localStorage.getItem('data')) === null ?
         'admin' :

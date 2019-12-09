@@ -10,7 +10,6 @@ export const productfilterHelper = (data, id, productName, productPrice, descrip
 }
 
 export const profilefilterHelper = (data, id, name) => {
-    console.log(name)
     const duplicateRow = data.filter(d => d.id !== id && d.name === name.trim())
     return duplicateRow.length > 0;
 }
