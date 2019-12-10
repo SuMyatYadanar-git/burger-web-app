@@ -24,7 +24,7 @@ const AdminProfileTable = props => {
     const [index, setIndex] = useState(-1)
     const profileNameInput = useRef('')
 
-   
+
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('data'))
         if (userData === null) {
@@ -77,28 +77,36 @@ const AdminProfileTable = props => {
                 icon: 'error'
             })
         } else {
-            let info = new FormData()
-            info.append('name', name)
-            info.append('address', address)
-            info.append('mail', mail)
-            info.append('phone', phone)
-            info.append('profileImage', image)
-            const token = JSON.parse(localStorage.getItem('data')).token;
-            editProfile({ id, info, token }, (error, data) => {
-                if (error) console.log('fetching error', error)
-                else {
-                    Swal.fire({
-                        title: 'Edit Profile',
-                        text: ' successfully change your profile!',
-                        icon: 'success'
-                    })
-                    setIsOpen(false)
-                    // userNameInput.current.focus();
-                    setProfileData(data.payload)
-                }
-            })
+            if (name.length === 0 || address.length === 0 || mail.length === 0 || phone.length === 0) {
+                profileNameInput.current.focus();
+                Swal.fire({
+                    title: 'Edit profile',
+                    text: ' not empty value!',
+                    icon: 'error'
+                })
+            } else {
+                let info = new FormData()
+                info.append('name', name)
+                info.append('address', address)
+                info.append('mail', mail)
+                info.append('phone', phone)
+                info.append('profileImage', image)
+                const token = JSON.parse(localStorage.getItem('data')).token;
+                editProfile({ id, info, token }, (error, data) => {
+                    if (error) console.log('fetching error', error)
+                    else {
+                        Swal.fire({
+                            title: 'Edit Profile',
+                            text: ' successfully change your profile!',
+                            icon: 'success'
+                        })
+                        setIsOpen(false)
+                        // userNameInput.current.focus();
+                        setProfileData(data.payload)
+                    }
+                })
+            }
         }
-
     }
     const handleNewProfile = () => {
         openModal1()

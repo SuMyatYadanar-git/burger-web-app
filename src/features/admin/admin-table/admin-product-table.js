@@ -70,29 +70,38 @@ const AdminProductTable = props => {
                 icon: 'error'
             })
         } else {
-            let info = new FormData();
-            info.append('name', productName);
-            info.append('price', productPrice);
-            info.append('description', description);
-            info.append('productImage', productImage)
-            const token = JSON.parse(localStorage.getItem('data')).token;
-            editProduct({ id, info, token }, (error, data) => {
-                if (error) console.log('fetching error', error)
-                else {
+            if (productName.length === 0 || productPrice.length === 0 || description.length === 0) {
+                productNameInput.current.focus();
+                Swal.fire({
+                    title: 'Edit Product',
+                    text: ' not empty value!',
+                    icon: 'error'
+                })
+            } else {
+                let info = new FormData();
+                info.append('name', productName);
+                info.append('price', productPrice);
+                info.append('description', description);
+                info.append('productImage', productImage)
+                const token = JSON.parse(localStorage.getItem('data')).token;
+                editProduct({ id, info, token }, (error, data) => {
+                    if (error) console.log('fetching error', error)
+                    else {
 
-                    Swal.fire({
-                        title: 'Edit Product',
-                        text: ' successfully change your product!',
-                        icon: 'success'
-                        // text: data.message,
-                    })
-                    setIsOpen(false)
-                    setProduct(data.payload)
-                }
-            })
+                        Swal.fire({
+                            title: 'Edit Product',
+                            text: ' successfully change your product!',
+                            icon: 'success'
+                            // text: data.message,
+                        })
+                        setIsOpen(false)
+                        setProduct(data.payload)
+                    }
+                })
+            }
         }
-
     }
+
     const handleNewProduct = () => {
         openModal1()
         setId('')

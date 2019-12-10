@@ -78,23 +78,34 @@ const AdminCategoryTable = props => {
                 icon: 'error'
             })
         } else {
-            let info = new FormData();
-            info.append('name', categoryName);
-            info.append('categoryImage', categoryImage);
-            const token = JSON.parse(localStorage.getItem('data')).token;
-            editCategory({ categoryId, info, token }, (error, data) => {
-                if (error) console.log('fetching error', error)
-                else {
-                    Swal.fire({
-                        title: 'Edit Category',
-                        text: ' successfully change your category!',
-                        icon: 'success'
-                    })
-                    setIsOpen(false)
-                    setCategory(data.payload)
-                }
-            })
+            if (categoryName.length === 0) {
+                userNameInput.current.focus();
+                Swal.fire({
+                    title: 'Edit Category',
+                    text: ' not empty value!',
+                    icon: 'error'
+                })
+            } else {
+                let info = new FormData();
+                info.append('name', categoryName);
+                info.append('categoryImage', categoryImage);
+
+                const token = JSON.parse(localStorage.getItem('data')).token;
+                editCategory({ categoryId, info, token }, (error, data) => {
+                    if (error) console.log('fetching error', error)
+                    else {
+                        Swal.fire({
+                            title: 'Edit Category',
+                            text: ' successfully change your category!',
+                            icon: 'success'
+                        })
+                        setIsOpen(false)
+                        setCategory(data.payload)
+                    }
+                })
+            }
         }
+
 
     }
     const handleNewCategory = () => {
