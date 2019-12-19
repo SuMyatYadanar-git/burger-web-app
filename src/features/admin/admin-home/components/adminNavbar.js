@@ -50,7 +50,6 @@ const AdminNavbar = props => {
                     <Link to='/admin-product' style={{ textDecoration: 'none', }}><div className="px-3">Product</div> </Link>
                     <Link to='/admin-profile' style={{ textDecoration: 'none', }}> <div className="px-3">Profile</div></Link>
                     <Link to='/user' style={{ textDecoration: 'none', }}> <div className="px-3">User</div></Link>
-
                 </div>
                 <div><img src={KmLogo} className="img-fluid" width={50} /></div>
             </div>

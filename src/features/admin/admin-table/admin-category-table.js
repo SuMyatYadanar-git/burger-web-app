@@ -233,7 +233,7 @@ const AdminCategoryTable = props => {
                     <label htmlFor="upload-photo" style={fileStyle}>Upload Image</label>
                     <input type="file" name="photo"
                         id="upload-photo"
-                        style={photoStyle}
+                        style={photoStyle}y
                         onChange={e => setCategoryImage(e.target.files[0])}
                         accept="image/*"
                     />

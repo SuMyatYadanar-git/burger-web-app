@@ -23,13 +23,14 @@ const AdminUserSetting = props => {
 
     const _onChangePwd = (e) => {
         e.preventDefault()
+        const md5 = require('md5')
         Npwd.length < 3 && Swal.fire({
             title: 'password must be above 4character at least!',
             text: ' please set again!',
             icon: 'error',
         })
         if (Npwd === Cpwd) {
-            const info = { Npwd, id, token }
+            const info = { Npwd: md5(Npwd), id, token }
             changePwd(info, (error, data) => {
                 if (error) console.log('fetching error', error)
                 else {
@@ -124,7 +125,7 @@ const AdminUserSetting = props => {
                         style={{ height: '3rem', fontSize: '1.8rem' }}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        
+
                         required
                     />
                 </div>
