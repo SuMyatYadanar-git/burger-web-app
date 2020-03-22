@@ -16,9 +16,9 @@ const Footer = props => {
         getAllProfile((error, data) => {
             if (error) console.log('fetching error', error)
             else {
-                const address = data[0].address
-                const mail = data[0].mail
-                const phone = data[0].phone
+                const address = data[0] === undefined ? null : data[0].address
+                const mail = data[0]=== undefined ? null : data[0].mail
+                const phone = data[0]=== undefined ? null : data[0].phone
                 setinfoData({ address, mail, phone })
             }
         })
@@ -67,7 +67,7 @@ const Footer = props => {
                     <button className='btn btn-warning w-100 text-dark' style={{ height: '40px' }}>SUBMIT</button>
                 </div> */}
                 </div>
-                <div style={{ textAlign: 'center', padding: 10, fontFamily: 'Volkhov' }}>© Copyright Kumo Solutions 2019</div>
+                <div style={{ textAlign: 'center', padding: 10, fontFamily: 'Volkhov' }}>© Copyright Lucy 2019</div>
             </div>
         </div>
 

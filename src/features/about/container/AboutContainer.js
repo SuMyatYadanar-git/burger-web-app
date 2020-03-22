@@ -8,9 +8,6 @@ import Progress from '../components/progress'
 import ReactPlayer from '../components/ReactPlayer'
 
 import * as Colors from '../../../config/color.config'
-import MenuCard from '../components/MenuCard';
-import CardData from '../components/cardData';
-
 
 
 const AboutContainer = props => {
@@ -39,39 +36,7 @@ const AboutContainer = props => {
                     <div className="mx-auto pt-4 ">
                         <Content />
                     </div>
-
-                    {/* <div className="row justify-content-center mb-1 " >
-                        <div className="col-xs-12 col-lg-3 mx-1 pt-5" style={{ borderBottom: `2px solid ${Colors.bgRed}` ,}} >
-                            <MenuCard title={"Burgers"}>
-                                <CardData menu="Classic Burger" price="2.99" desc="An forensibus incorrupte con" />
-                                <CardData menu="Special Big Burger" price="4.99" desc="Et ius platonem electram, et ancillae " />
-                                <CardData menu="Mexican Burger" price="3.99" desc="An forensibus concludaturque " />
-                                <CardData menu=" Classic Burger " price="2.99" desc="An forensibus incorrupte " />
-                                <CardData menu="Special Big Burger" price="4.99" desc="Et ius platonem electram, et ancillae " />
-                                <CardData menu="Mexican Burger" price="3.99" desc="An forensibus concludaturque " />
-                            </MenuCard>
-                        </div>
-                        <div className="col-xs-12 col-lg-3  mx-1 pt-5" style={{ borderBottom: `2px solid ${Colors.bgRed}` }} >
-                            <MenuCard title={"Sandwiches"}>
-                                <CardData menu="Classic Burger" price="2.99" desc="An forensibus incorrupte con" />
-                                <CardData menu="Special Big Burger" price="4.99" desc="Et ius platonem electram, et ancillae " />
-                                <CardData menu="Mexican Burger" price="3.99" desc="An forensibus concludaturque " />
-                                <CardData menu=" Classic Burger " price="2.99" desc="An forensibus incorrupte " />
-                                <CardData menu="Special Big Burger" price="4.99" desc="Et ius platonem electram, et ancillae " />
-                                <CardData menu="Mexican Burger" price="3.99" desc="An forensibus concludaturque " />
-                            </MenuCard>
-                        </div>
-                        <div className="col-xs-12 col-lg-3  mx-1 pt-5" style={{ borderBottom: `2px solid ${Colors.bgRed}` }}>
-                            <MenuCard title={"Salads"}>
-                                <CardData menu="Classic Burger" price="2.99" desc="An forensibus incorrupte con" />
-                                <CardData menu="Special Big Burger" price="4.99" desc="Et ius platonem electram, et ancillae " />
-                                <CardData menu="Mexican Burger" price="3.99" desc="An forensibus concludaturque " />
-                                <CardData menu=" Classic Burger " price="2.99" desc="An forensibus incorrupte " />
-                                <CardData menu="Special Big Burger" price="4.99" desc="Et ius platonem electram, et ancillae " />
-                                <CardData menu="Mexican Burger" price="3.99" desc="An forensibus concludaturque " />
-                            </MenuCard>
-                        </div>
-                    </div> */}
+                    
                 </div>
             </div>
         </div>

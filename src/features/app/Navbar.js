@@ -4,7 +4,7 @@ import { withMedia } from 'react-media-query-hoc'
 
 import * as route from '../../config/route.config'
 import BurgerIcon from '../../assets/icons/Burger'
-import KumoIcon from '../../Images/kumo_Logo.png'
+// import KumoIcon from '../../Images/kumo_Logo.png'
 import MyLink from '../../common/myLink'
 import * as Colors from '../../config/color.config'
 
@@ -17,14 +17,12 @@ const Navbar = props => {
     }
 
     return (
-        // style={{backgroundColor:'rgb(238,221,130,0.5)'}} rgb(248,249,195,0.4)
-
         <div className='container-fluid sticky-top py-4' style={{ fontSize: media.mobile ? 12 : 16, background: '#700000' }}>
             <div className='d-flex flex-row justify-content-between'>
                 <div className='row'>
                     <div className='px-5 c-center'>
-                    {/* <BurgerIcon width={45} height={45} />  */}
-                        <Link to={route.home}>  <img src={KumoIcon}  width={100}   /> </Link>
+                     <Link to={route.home}> <BurgerIcon width={45} height={45} /></Link>  
+                        {/* <Link to={route.home}>  <img src={KumoIcon}  width={100}   /> </Link> */}
                     </div>
                     {
                         // color: '#FF6C33'
@@ -50,7 +48,7 @@ const Navbar = props => {
                     (media.desktop || media.tablet) &&
                     <div className={`d-flex`} style={{ fontSize: 25 }}>
                         <div className=" px-3 pt-3" style={{ cursor: 'pointer' }}>
-                          <a href="https://www.facebook.com/Kumo-Solutions-100459277998502/?epa=SEARCH_BOX" target="_blank" rel="noopener noreferrer"> <span style={{ color: Colors.white }}><i className="fab fa-facebook" /></span></a> 
+                          <a href="https://www.facebook.com/profile.php?id=100011313192900" target="_blank" rel="noopener noreferrer"> <span style={{ color: Colors.white }}><i className="fab fa-facebook" /></span></a> 
                         </div>
                         {/* <div className=" px-3 pt-3" style={{ cursor: 'pointer' }}>
                             <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"> <span style={{ color: Colors.white }}><i className="fab fa-instagram" /></span></a>
@@ -61,7 +59,6 @@ const Navbar = props => {
                     </div>
                 }
                 {
-                    // color: '#FF6C33'
                     (media.desktop || media.tablet) ||
                     <div className={`d-flex my-3`} style={{ fontSize: 25, border: '1px solid white', borderRadius: 5, height: '40px' }}>
                         <i className="fas fa-bars text-light px-3" onClick={_handleBar} style={{ paddingTop: 8 }} />

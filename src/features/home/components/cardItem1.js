@@ -6,8 +6,6 @@ import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-// import bg1 from '../../../Images/bg.jpg'
-// import bg3 from '../../../Images/bg2.jpg'
 import '../../../assets/css/burgerTypehover.css'
 import * as route from '../../../config/route.config'
 import './slider.css'
@@ -15,6 +13,7 @@ import { IMG_SERVER } from '../../../network/api'
 
 const CardItem = props => {
     const { media, category } = props
+    console.log(category)
     if (category.length === 0) return null;
 
     const settings = {
@@ -43,7 +42,7 @@ const CardItem = props => {
                 <div id="box" style={{ overflow: 'hidden', scrollBehavior: 'smooth' }}>
                     <Slider {...settings}>
                         {
-                            category.map((v, k) => {
+                           category.map((v, k) => {
                                 return (
                                     <div className="px-1" key={k}>
                                         <BurgerType img={`${IMG_SERVER}/${v.c_img}`} title={v.c_name} media={media} />

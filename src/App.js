@@ -7,7 +7,6 @@ import { MediaQueryProvider } from 'react-media-query-hoc'
 
 import AppRoute from './AppRoute';
 
-
 function App() {
   const customQueries = {
     mobile: 'screen and (min-width: 640px) and (max-width:767px)',/* (max-width: 640px) */

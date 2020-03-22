@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
 
-import { GetloginData } from '../../../../network/userFetcher'
-import KmLogo from '../../../../Images/kumo_Logo.png'
 import KmModal from '../../../../common/KmModal'
+import BurgerIcon from '../../../../assets/icons/Burger'
 import * as route from '../../../../config/route.config'
 
 const AdminNavbar = props => {
@@ -11,8 +10,6 @@ const AdminNavbar = props => {
 
     const _onClickLogout = () => {
         localStorage.removeItem('data');
-        // window.location.href = `/${route.admin}`
-        // window.history.backward(0);
         history.push(`/${route.admin}`)
 
     }
@@ -51,7 +48,7 @@ const AdminNavbar = props => {
                     <Link to='/admin-profile' style={{ textDecoration: 'none', }}> <div className="px-3">Profile</div></Link>
                     <Link to='/user' style={{ textDecoration: 'none', }}> <div className="px-3">User</div></Link>
                 </div>
-                <div><img src={KmLogo} className="img-fluid" width={50} /></div>
+                <div><BurgerIcon width={45} height={45} /></div>
             </div>
             {/* <nav aria-label="breadcrumb" className="d-flex justify-content-between align-items-center ">
                 <ol className="breadcrumb " style={{ backgroundColor: 'transparent', fontSize: '1.5rem', }}>

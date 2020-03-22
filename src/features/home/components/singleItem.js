@@ -1,10 +1,7 @@
 import React from 'react'
 import { withMedia } from 'react-media-query-hoc'
-import { Link } from 'react-router-dom'
 
 import bg1 from '../../../Images/bgt.jpg'
-
-import * as route from '../../../config/route.config'
 
 const SingleItem = props => {
     const { media } = props
